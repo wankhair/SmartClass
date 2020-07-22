@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "666126215802",
+    "firebase_url": "https://smartclassv3.firebaseio.com",
+    "project_id": "smartclassv3",
+    "storage_bucket": "smartclassv3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666126215802:android:9a968b02bd7f2bfbc929c3",
+        "android_client_info": {
+          "package_name": "com.akumine.smartclass"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666126215802-g0hboms4k5bq3qkva67lq717vj860gnl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.akumine.smartclass",
+            "certificate_hash": "f4f5561f9b4f67d6cb3a6c98dcfa6a2cac7daf5b"
+          }
+        },
+        {
+          "client_id": "666126215802-nhqdu58l81jn42hi868g8f3bn129ce5l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXYKE09qCUH3Il03R3Sf2Oh8tdlBu025U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666126215802-nhqdu58l81jn42hi868g8f3bn129ce5l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

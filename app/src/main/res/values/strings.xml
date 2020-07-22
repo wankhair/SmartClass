@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Smart Class</string>
+
+    <string name="welcome_to_smart_class">Welcome to Smart Class</string>
+
+    <string name="your_email">Your Email…</string>
+    <string name="password">Password…</string>
+    <string name="your_name">Your Name…</string>
+    <string name="your_phone_no">Your Phone No…</string>
+
+    <string name="login">Login</string>
+    <string name="login_to_account">Login to Account</string>
+    <string name="need_account_register_now">Need Account? Register Now</string>
+    <string name="register">Register</string>
+    <string name="register_account">Register Account</string>
+    <string name="already_have_account">Already have Account?</string>
+
+    <string name="user_details">User Details</string>
+    <string name="username">Username:</string>
+    <string name="phone_no">Phone No:</string>
+    <string name="role">Role:</string>
+    <string name="role_student">Student</string>
+    <string name="role_lecturer">Lecturer</string>
+    <string name="finish_setup">Finish Setup</string>
+
+    <string name="has_uploaded_a_post_on">has uploaded a post on</string>
+
+    <string name="colon">:</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="update_profile">Update Profile</string>
+
+    <string name="class_name">Class Name:</string>
+    <string name="class_description">Class Description:</string>
+    <string name="member_s_limit">Member\'s Limit :</string>
+    <string name="add_class">Add Class</string>
+</resources>

@@ -133,7 +133,7 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_button"
-            android:text="@string/edit_profile"
+            android:text="@string/edit"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorWhite" />
 
@@ -260,7 +260,7 @@
             android:layout_marginEnd="50dp"
             android:layout_marginBottom="15dp"
             android:background="@drawable/rounded_button"
-            android:text="@string/update_profile"
+            android:text="@string/update"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorWhite"
             android:visibility="gone"/>

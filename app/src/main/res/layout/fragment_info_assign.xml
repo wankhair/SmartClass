@@ -1,282 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.akumine.smartclass.assignment.fragment.InfoFragment">
+    android:background="@color/colorBackground"
+    tools:context=".assignment.fragment.InfoFragment">
 
-    <ScrollView
+    <!-- Container Info Assignment-->
+    <LinearLayout
+        android:id="@+id/container_info_assignment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:orientation="vertical">
+            android:text="@string/assignment_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/assign_info_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"
+            tools:text="Assignment Name Here" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/assignment_description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:id="@+id/assign_info_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"
+            tools:text="Assignment Description Here" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/due_date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:id="@+id/due_date_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"
+            tools:text="Due Date Here" />
+
+    </LinearLayout>
+
+    <!-- Container Edit Info Class-->
+    <LinearLayout
+        android:id="@+id/container_edit_info_assignment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_info_assignment"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="35dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/assignment_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <EditText
+            android:id="@+id/assign_edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/your_assignment_name_here"
+            android:inputType="textCapSentences"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/assignment_description"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <EditText
+            android:id="@+id/assign_edit_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="@string/your_assignment_description_here"
+            android:inputType="textCapSentences|textImeMultiLine"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/due_date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <LinearLayout
+            android:id="@+id/layout_date_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/date_picker"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="50dp"
-                android:layout_marginEnd="35dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Assignment Name:"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/assign_info_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginTop="5dp"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/assign_edit_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:inputType="textCapSentences"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="35dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Assignment Description:"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/assign_info_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/assign_edit_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="5dp"
-                    android:inputType="textCapSentences|textImeMultiLine"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="35dp"
-                android:orientation="horizontal"
-                android:weightSum="4">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Due Date :"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/due_date_info"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="14sp" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_date_time"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:visibility="gone"
-                        android:weightSum="2">
-
-                        <TextView
-                            android:id="@+id/date_picker"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="choose date"
-                            android:textColor="@color/colorBlack"
-                            android:textColorHint="@color/whiteTransparentHalf"
-                            android:textSize="12sp"
-                            android:textStyle="italic" />
-
-                        <TextView
-                            android:id="@+id/time_picker"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:text="choose time"
-                            android:textColor="@color/colorBlack"
-                            android:textColorHint="@color/whiteTransparentHalf"
-                            android:textSize="12sp"
-                            android:textStyle="italic" />
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_edit_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="35dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:text="@string/choose_date"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textStyle="italic|bold" />
 
-                <Button
-                    android:id="@+id/btn_edit"
-                    android:layout_width="110dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/rounded_button"
-                    android:text="Edit Assignemnt"
-                    android:textColor="@color/colorWhite" />
-
-                <Button
-                    android:id="@+id/btn_delete"
-                    android:layout_width="110dp"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/rounded_button"
-                    android:text="Delete Assignment"
-                    android:textColor="@color/colorWhite" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_cancel_update"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/time_picker"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginEnd="35dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
-
-                <Button
-                    android:id="@+id/btn_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/rounded_button"
-                    android:text="Cancel"
-                    android:textColor="@color/colorWhite" />
-
-                <Button
-                    android:id="@+id/btn_update"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/rounded_button"
-                    android:text="Update"
-                    android:textColor="@color/colorWhite" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_download"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginEnd="35dp"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                android:weightSum="2">
-
-                <TextView
-                    android:id="@+id/document_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="14sp" />
-
-                <Button
-                    android:id="@+id/btn_download"
-                    android:layout_width="match_parent"
-                    android:layout_height="35dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:background="@drawable/rounded_button"
-                    android:text="DOWNLOAD FILE"
-                    android:textColor="@color/colorWhite" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_view_qr"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="35dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/border_shadow"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Please include this QR code during submission!" />
-
-                <ImageView
-                    android:id="@+id/image_qr"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-            </LinearLayout>
+                android:text="@string/choose_time"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textStyle="italic|bold" />
 
         </LinearLayout>
 
-    </ScrollView>
+    </LinearLayout>
 
-</FrameLayout>
+    <!-- Container Download File-->
+    <LinearLayout
+        android:id="@+id/container_download_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_edit_info_assignment"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="35dp"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_download"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:text="@string/download_file"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/document_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:maxLines="2"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+    </LinearLayout>
+
+    <!-- Container QR Image-->
+    <LinearLayout
+        android:id="@+id/container_qr_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_download_file"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/border_shadow"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/note_please_include_this_qr_code_during_submission"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/image_qr"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/border_shadow" />
+
+    </LinearLayout>
+
+    <!-- Container Edit & Delete Button-->
+    <LinearLayout
+        android:id="@+id/container_edit_delete_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_qr_image"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:text="@string/edit"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:text="@string/delete"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <!-- Container Cancel & Update Button-->
+    <LinearLayout
+        android:id="@+id/container_cancel_update_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_edit_delete_btn"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:text="@string/cancel"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_button"
+            android:text="@string/update"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+</RelativeLayout>

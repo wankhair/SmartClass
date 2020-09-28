@@ -59,25 +59,31 @@ import java.util.Locale;
 
 public class InfoFragment extends Fragment implements View.OnClickListener {
 
+    private LinearLayout containerInfoAssign;
+    private LinearLayout containerEditInfoAssign;
+    private LinearLayout containerEditDeleteBtn;
+    private LinearLayout containerCancelUpdateBtn;
+    private LinearLayout containerDownloadFile;
+    private LinearLayout containerViewQrImage;
+
     private TextView assignInfoTitle;
     private TextView assignInfoDesc;
     private TextView dueDateInfo;
-    private TextView docName;
+
+    private EditText assignEditTitle;
+    private EditText assignEditDesc;
     private TextView datePicker;
     private TextView timePicker;
+
+    private TextView docName;
+    private ImageView imageQr;
+
     private Button btnEdit;
     private Button btnDelete;
     private Button btnCancel;
     private Button btnUpdate;
     private Button btnDownload;
-    private ImageView imageQr;
-    private LinearLayout layoutDateTime;
-    private LinearLayout layoutEditDelete;
-    private LinearLayout layoutCancelUpdate;
-    private LinearLayout layoutDownload;
-    private LinearLayout layoutViewQr;
-    private EditText assignEditTitle;
-    private EditText assignEditDesc;
+
     private String assignmentName;
     private String assignmentDescription;
     private String documentUrl;
@@ -124,40 +130,48 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
             assignId = getArguments().getString(Constant.ARGS_ASSIGN_ID);
         }
 
+        containerInfoAssign = view.findViewById(R.id.container_info_assignment);
+        containerEditInfoAssign = view.findViewById(R.id.container_edit_info_assignment);
+        containerDownloadFile = view.findViewById(R.id.container_download_file);
+        containerViewQrImage = view.findViewById(R.id.container_qr_image);
+        containerEditDeleteBtn = view.findViewById(R.id.container_edit_delete_btn);
+        containerCancelUpdateBtn = view.findViewById(R.id.container_cancel_update_btn);
+
         assignInfoTitle = view.findViewById(R.id.assign_info_title);
         assignInfoDesc = view.findViewById(R.id.assign_info_desc);
+        dueDateInfo = view.findViewById(R.id.due_date_info);
+
         assignEditTitle = view.findViewById(R.id.assign_edit_title);
         assignEditDesc = view.findViewById(R.id.assign_edit_desc);
-        dueDateInfo = view.findViewById(R.id.due_date_info);
         datePicker = view.findViewById(R.id.date_picker);
         timePicker = view.findViewById(R.id.time_picker);
+
         docName = view.findViewById(R.id.document_name);
-        btnDownload = view.findViewById(R.id.btn_download);
         imageQr = view.findViewById(R.id.image_qr);
+
+        btnDownload = view.findViewById(R.id.btn_download);
         btnEdit = view.findViewById(R.id.btn_edit);
         btnCancel = view.findViewById(R.id.btn_cancel);
         btnDelete = view.findViewById(R.id.btn_delete);
         btnUpdate = view.findViewById(R.id.btn_update);
-        layoutDateTime = view.findViewById(R.id.layout_date_time);
-        layoutEditDelete = view.findViewById(R.id.layout_edit_delete);
-        layoutCancelUpdate = view.findViewById(R.id.layout_cancel_update);
-        layoutDownload = view.findViewById(R.id.layout_download);
-        layoutViewQr = view.findViewById(R.id.layout_view_qr);
+
+        datePicker.setOnClickListener(this);
+        timePicker.setOnClickListener(this);
+        btnDownload.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
         btnCancel.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);
-        datePicker.setOnClickListener(this);
-        timePicker.setOnClickListener(this);
-        btnDownload.setOnClickListener(this);
 
         String role = PreferenceUtil.getRole(context);
 
         if (role != null) {
             if (role.equals(Constant.ROLE_LECTURER)) {
-                layoutEditDelete.setVisibility(View.VISIBLE);
+                // show edit & delete button
+                containerEditDeleteBtn.setVisibility(View.VISIBLE);
             } else if (role.equals(Constant.ROLE_STUDENT)) {
-                layoutDownload.setVisibility(View.VISIBLE);
+                // show download file button
+                containerDownloadFile.setVisibility(View.VISIBLE);
             }
         }
 
@@ -202,10 +216,10 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         Calendar calendar = Calendar.getInstance();
         switch (view.getId()) {
             case R.id.btn_edit:
-                setEditVisibility();
+                setEditMode();
                 break;
             case R.id.btn_cancel:
-                setCancelVisibility();
+                removeEditMode();
                 break;
             case R.id.btn_delete:
                 showDeleteDialog();
@@ -225,30 +239,20 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void setEditVisibility() {
-        layoutEditDelete.setVisibility(View.GONE);
-        assignInfoTitle.setVisibility(View.GONE);
-        assignInfoDesc.setVisibility(View.GONE);
-        dueDateInfo.setVisibility(View.GONE);
+    private void setEditMode() {
+        containerEditInfoAssign.setVisibility(View.VISIBLE);
+        containerCancelUpdateBtn.setVisibility(View.VISIBLE);
 
-        assignEditTitle.setVisibility(View.VISIBLE);
-        assignEditDesc.setVisibility(View.VISIBLE);
-        layoutDateTime.setVisibility(View.VISIBLE);
-        layoutCancelUpdate.setVisibility(View.VISIBLE);
+        containerInfoAssign.setVisibility(View.GONE);
+        containerEditDeleteBtn.setVisibility(View.GONE);
     }
 
-    private void setCancelVisibility() {
-        layoutEditDelete.setVisibility(View.VISIBLE);
-        assignInfoTitle.setVisibility(View.VISIBLE);
-        assignInfoDesc.setVisibility(View.VISIBLE);
-        dueDateInfo.setVisibility(View.VISIBLE);
+    private void removeEditMode() {
+        containerInfoAssign.setVisibility(View.VISIBLE);
+        containerEditDeleteBtn.setVisibility(View.VISIBLE);
 
-        assignEditTitle.setVisibility(View.GONE);
-        assignEditDesc.setVisibility(View.GONE);
-        layoutDateTime.setVisibility(View.GONE);
-        layoutCancelUpdate.setVisibility(View.GONE);
-
-        Toast.makeText(context, "You Cancelled Edit", Toast.LENGTH_SHORT).show();
+        containerEditInfoAssign.setVisibility(View.GONE);
+        containerCancelUpdateBtn.setVisibility(View.GONE);
     }
 
     private void showDeleteDialog() {
@@ -296,16 +300,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
         Toast.makeText(context, "Assignment Information Updated", Toast.LENGTH_SHORT).show();
 
-        layoutEditDelete.setVisibility(View.VISIBLE);
-        assignInfoTitle.setVisibility(View.VISIBLE);
-        assignInfoDesc.setVisibility(View.VISIBLE);
-        dueDateInfo.setVisibility(View.VISIBLE);
-
-        assignEditTitle.setVisibility(View.GONE);
-        assignEditDesc.setVisibility(View.GONE);
-        datePicker.setVisibility(View.GONE);
-        timePicker.setVisibility(View.GONE);
-        layoutCancelUpdate.setVisibility(View.GONE);
+        removeEditMode();
     }
 
     private void getDate(Calendar calendar) {
@@ -374,7 +369,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
                 BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                 Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
                 imageQr.setImageBitmap(bitmap);
-                layoutViewQr.setVisibility(View.VISIBLE);
+                containerViewQrImage.setVisibility(View.VISIBLE);
 
                 FileOutputStream outputStream;
                 File sdCard = Environment.getExternalStorageDirectory();

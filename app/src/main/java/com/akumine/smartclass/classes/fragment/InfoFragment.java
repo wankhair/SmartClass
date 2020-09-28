@@ -55,6 +55,11 @@ import java.util.Locale;
 public class InfoFragment extends Fragment implements View.OnClickListener {
 
     private String[] list = {"Select number :", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
+    private LinearLayout containerInfoClass;
+    private LinearLayout containerEditInfoClass;
+    private LinearLayout containerImageQR;
+    private LinearLayout containerEditDeleteBtn;
+    private LinearLayout containerCancelUpdateBtn;
     private TextView classInfoTitle;
     private TextView classInfoDesc;
     private TextView classMembers;
@@ -62,10 +67,6 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
     private EditText classEditDesc;
     private Spinner spinnerMember;
     private ImageView imageQr;
-    private LinearLayout layoutViewQr;
-    private LinearLayout layoutSpinner;
-    private LinearLayout layoutEditDelete;
-    private LinearLayout layoutCancelUpdate;
     private Button btnGenerateQr;
     private Button btnEdit;
     private Button btnDelete;
@@ -117,38 +118,44 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
             classId = getArguments().getString(Constant.ARGS_CLASS_ID);
         }
 
+        containerInfoClass = view.findViewById(R.id.container_info_class);
+        containerEditInfoClass = view.findViewById(R.id.container_edit_info_class);
+        containerImageQR = view.findViewById(R.id.container_qr_image);
+        containerEditDeleteBtn = view.findViewById(R.id.container_edit_delete_btn);
+        containerCancelUpdateBtn = view.findViewById(R.id.container_cancel_update_btn);
         classInfoTitle = view.findViewById(R.id.class_info_title);
         classInfoDesc = view.findViewById(R.id.class_info_desc);
         classMembers = view.findViewById(R.id.class_members);
         classEditTitle = view.findViewById(R.id.class_edit_title);
         classEditDesc = view.findViewById(R.id.class_edit_desc);
         spinnerMember = view.findViewById(R.id.spinner_member);
-        layoutViewQr = view.findViewById(R.id.layout_view_qr);
-        layoutSpinner = view.findViewById(R.id.layout_spinner);
-        layoutEditDelete = view.findViewById(R.id.layout_edit_delete);
-        layoutCancelUpdate = view.findViewById(R.id.layout_cancel_update);
         imageQr = view.findViewById(R.id.image_qr);
         btnGenerateQr = view.findViewById(R.id.btn_generate_qr);
         btnEdit = view.findViewById(R.id.btn_edit);
         btnDelete = view.findViewById(R.id.btn_delete);
         btnCancel = view.findViewById(R.id.btn_cancel);
         btnUpdate = view.findViewById(R.id.btn_update);
+        btnGenerateQr.setOnClickListener(this);
+        btnEdit.setOnClickListener(this);
+        btnCancel.setOnClickListener(this);
+        btnDelete.setOnClickListener(this);
+        btnUpdate.setOnClickListener(this);
 
         String role = PreferenceUtil.getRole(context);
 
-        if (role != null && role.equals(Constant.ROLE_LECTURER)) {
-            btnGenerateQr.setVisibility(View.VISIBLE);
-            layoutEditDelete.setVisibility(View.VISIBLE);
+        if (role.equals(Constant.ROLE_LECTURER)) {
+            containerImageQR.setVisibility(View.VISIBLE);
+            containerEditDeleteBtn.setVisibility(View.VISIBLE);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, list);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMember.setAdapter(adapter);
 
-        setupUserInterface(adapter);
+        getClassDetails(adapter);
     }
 
-    private void setupUserInterface(final ArrayAdapter<String> adapter) {
+    private void getClassDetails(final ArrayAdapter<String> adapter) {
         DatabaseReference tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
         tableClass.addValueEventListener(new ValueEventListener() {
             @Override
@@ -169,8 +176,6 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
                     int position = adapter.getPosition(maxUser);
                     spinnerMember.setSelection(position);
-
-                    initializeButtonOnClickListener();
                 }
             }
 
@@ -180,25 +185,21 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void initializeButtonOnClickListener() {
-        btnGenerateQr.setOnClickListener(this);
-        btnEdit.setOnClickListener(this);
-        btnCancel.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
-        btnUpdate.setOnClickListener(this);
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_generate_qr:
-                performQrGeneration();
+                if (PermissionUtil.hasWritePermissionToExternalStorage(context)) {
+                    performQrGeneration();
+                } else {
+                    Toast.makeText(context, "Write to Storage Permission Not Granted\nPlease go to Setting", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btn_edit:
-                setEditVisibility();
+                setEditMode();
                 break;
             case R.id.btn_cancel:
-                setCancelVisibility();
+                removeEditMode();
                 break;
             case R.id.btn_delete:
                 showDeleteDialogPopup();
@@ -209,75 +210,57 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    //------------------------Local Method----------------------------------//
-
     private void performQrGeneration() {
-        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
+            MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
             BitMatrix bitMatrix = multiFormatWriter.encode(classId, BarcodeFormat.QR_CODE, 300, 300);
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+
+            imageQr.setVisibility(View.VISIBLE);
             imageQr.setImageBitmap(bitmap);
-            layoutViewQr.setVisibility(View.VISIBLE);
             isQrGenerated = true;
 
-            FileOutputStream outputStream;
-            File sdCard = Environment.getExternalStorageDirectory();
-            File directory = new File(sdCard.getAbsolutePath() + "/SmartClass/pictures");
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
             String fileName = "SmartClass" + System.currentTimeMillis() + ".jpg";
-            File outFile = new File(directory, fileName);
-            outputStream = new FileOutputStream(outFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            outputStream.flush();
-            outputStream.close();
 
-            if (PermissionUtil.hasWritePermissionToExternalStorage(context)) {
-                addImageToGallery(outFile.getAbsolutePath(), context);
-            } else {
-                Toast.makeText(context, "Write to Storage Permission Not Granted\nPlease go to Setting", Toast.LENGTH_SHORT).show();
+            File publicDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            File dir = new File(publicDirectory.getAbsolutePath() + "/SmartClass/pictures");
+            if (!dir.exists()) {
+                dir.mkdirs();
             }
+            File outFile = new File(dir, fileName);
+            if (!outFile.exists()) {
+                FileOutputStream outputStream = new FileOutputStream(outFile);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                outputStream.flush();
+                outputStream.close();
 
+                addImageToGallery(outFile.getAbsolutePath(), context);
+            }
         } catch (WriterException | IOException e) {
             e.printStackTrace();
         }
         Toast.makeText(context, "QR Code Generated", Toast.LENGTH_SHORT).show();
     }
 
-    private void setEditVisibility() {
-        classInfoTitle.setVisibility(View.GONE);
-        classInfoDesc.setVisibility(View.GONE);
-        classMembers.setVisibility(View.GONE);
-        btnGenerateQr.setVisibility(View.GONE);
+    private void setEditMode() {
+        containerInfoClass.setVisibility(View.GONE);
         if (isQrGenerated) {
-            layoutViewQr.setVisibility(View.GONE);
+            containerImageQR.setVisibility(View.GONE);
         }
-        layoutEditDelete.setVisibility(View.GONE);
+        containerEditDeleteBtn.setVisibility(View.GONE);
 
-        classEditTitle.setVisibility(View.VISIBLE);
-        classEditDesc.setVisibility(View.VISIBLE);
-        layoutSpinner.setVisibility(View.VISIBLE);
-        layoutCancelUpdate.setVisibility(View.VISIBLE);
+        containerEditInfoClass.setVisibility(View.VISIBLE);
+        containerCancelUpdateBtn.setVisibility(View.VISIBLE);
     }
 
-    private void setCancelVisibility() {
-        classInfoTitle.setVisibility(View.VISIBLE);
-        classInfoDesc.setVisibility(View.VISIBLE);
-        classMembers.setVisibility(View.VISIBLE);
-        btnGenerateQr.setVisibility(View.VISIBLE);
-        if (isQrGenerated) {
-            layoutViewQr.setVisibility(View.VISIBLE);
-        }
-        layoutEditDelete.setVisibility(View.VISIBLE);
+    private void removeEditMode() {
+        containerInfoClass.setVisibility(View.VISIBLE);
+        containerImageQR.setVisibility(View.VISIBLE);
+        containerEditDeleteBtn.setVisibility(View.VISIBLE);
 
-        classEditTitle.setVisibility(View.GONE);
-        classEditDesc.setVisibility(View.GONE);
-        layoutSpinner.setVisibility(View.GONE);
-        layoutCancelUpdate.setVisibility(View.GONE);
-
-        Toast.makeText(context, "You Cancelled Edit", Toast.LENGTH_SHORT).show();
+        containerEditInfoClass.setVisibility(View.GONE);
+        containerCancelUpdateBtn.setVisibility(View.GONE);
     }
 
     private void showDeleteDialogPopup() {
@@ -311,8 +294,8 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
     }
 
     private void updateClassInformation() {
-        final String classTitle = classEditTitle.getText().toString();
-        final String classDesc = classEditDesc.getText().toString();
+        String classTitle = classEditTitle.getText().toString();
+        String classDesc = classEditDesc.getText().toString();
         String selected = String.valueOf(spinnerMember.getSelectedItem());
 
         Calendar calendar = Calendar.getInstance();
@@ -326,17 +309,7 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
         Toast.makeText(context, "Class Information Updated", Toast.LENGTH_SHORT).show();
 
-        classInfoTitle.setVisibility(View.VISIBLE);
-        classInfoDesc.setVisibility(View.VISIBLE);
-        classMembers.setVisibility(View.VISIBLE);
-        btnGenerateQr.setVisibility(View.VISIBLE);
-        layoutViewQr.setVisibility(View.VISIBLE);
-        layoutEditDelete.setVisibility(View.VISIBLE);
-
-        classEditTitle.setVisibility(View.GONE);
-        classEditDesc.setVisibility(View.GONE);
-        layoutSpinner.setVisibility(View.GONE);
-        layoutCancelUpdate.setVisibility(View.GONE);
+        removeEditMode();
     }
 
     @TargetApi(Build.VERSION_CODES.Q)

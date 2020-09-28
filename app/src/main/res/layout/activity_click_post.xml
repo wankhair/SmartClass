@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context="com.akumine.smartclass.classes.ClickPostActivity">
+    android:background="@color/colorBackground"
+    tools:context=".classes.ClickPostActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -17,15 +17,16 @@
         app:theme="@style/ToolBarStyle" />
 
     <LinearLayout
+        android:id="@+id/container_click_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
         android:layout_below="@id/toolbar"
-        android:gravity="center"
         android:orientation="vertical"
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/edit_post_image"
+            android:id="@+id/post_image"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_gravity="center"
@@ -35,45 +36,98 @@
             android:src="@drawable/def_image" />
 
         <TextView
+            android:id="@+id/post_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:padding="12dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            tools:text="Post Text Here" />
+
+        <EditText
             android:id="@+id/edit_post_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/custom_rectangle"
-            android:hint="Type your post here"
-            android:textSize="16sp"
-            android:padding="12dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_edit_post"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_button"
-                android:text="Edit Post"
-                android:textColor="@color/colorWhite" />
-
-            <Button
-                android:id="@+id/btn_delete_post"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/rounded_button"
-                android:text="Delete Post"
-                android:textColor="@color/colorWhite" />
-
-        </LinearLayout>
+            android:hint="@string/your_post_text_here"
+            android:padding="12dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:visibility="gone" />
 
     </LinearLayout>
 
+    <!-- Container Edit & Delete Button-->
+    <LinearLayout
+        android:id="@+id/container_edit_delete_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_edit_post"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/edit"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btn_delete_post"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/delete"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <!-- Container Cancel & Update Button-->
+    <LinearLayout
+        android:id="@+id/container_cancel_update_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/btn_cancel_post"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/cancel"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btn_update_post"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/update"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
 
 </RelativeLayout>

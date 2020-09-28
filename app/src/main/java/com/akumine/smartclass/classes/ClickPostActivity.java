@@ -4,13 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +21,6 @@ import androidx.appcompat.widget.Toolbar;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.Post;
 import com.akumine.smartclass.util.Constant;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,10 +30,16 @@ import com.squareup.picasso.Picasso;
 
 public class ClickPostActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private LinearLayout containerEditDeleteBtn;
+    private LinearLayout containerCancelUpdateBtn;
+
     private ImageView postImage;
     private TextView postText;
+    private EditText editPostText;
     private Button btnEditPost;
     private Button btnDeletePost;
+    private Button btnCancelPost;
+    private Button btnUpdatePost;
 
     private DatabaseReference tablePost;
     private DatabaseReference tableDeletePost;
@@ -71,13 +76,19 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
         uid = intent.getStringExtra(Constant.EXTRA_USER_ID);
         postId = intent.getStringExtra(Constant.EXTRA_POST_ID);
 
-        postImage = (ImageView) findViewById(R.id.edit_post_image);
-        postText = (TextView) findViewById(R.id.edit_post_text);
+        containerEditDeleteBtn = (LinearLayout) findViewById(R.id.container_edit_delete_btn);
+        containerCancelUpdateBtn = (LinearLayout) findViewById(R.id.container_cancel_update_btn);
+        postImage = (ImageView) findViewById(R.id.post_image);
+        postText = (TextView) findViewById(R.id.post_text);
+        editPostText = (EditText) findViewById(R.id.edit_post_text);
         btnEditPost = (Button) findViewById(R.id.btn_edit_post);
         btnDeletePost = (Button) findViewById(R.id.btn_delete_post);
-
-        btnEditPost.setVisibility(View.INVISIBLE);
-        btnDeletePost.setVisibility(View.INVISIBLE);
+        btnCancelPost = (Button) findViewById(R.id.btn_cancel_post);
+        btnUpdatePost = (Button) findViewById(R.id.btn_update_post);
+        btnEditPost.setOnClickListener(this);
+        btnDeletePost.setOnClickListener(this);
+        btnCancelPost.setOnClickListener(this);
+        btnUpdatePost.setOnClickListener(this);
 
         tablePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST).child(postId);
         tablePost.addValueEventListener(new ValueEventListener() {
@@ -89,92 +100,83 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
                     String user = dataSnapshot.child(Post.DB_COLUMN_USER_ID).getValue().toString();
 
                     postText.setText(text);
+                    editPostText.setText(text);
                     Picasso.get().load(image).into(postImage);
 
-                    //if yes, only owner can edit & delete
-                    //to set listener
-                    checkOwnerOfPost(user);
+                    //if yes, only owner can modify post
+                    if (uid.equals(user)) {
+                        containerEditDeleteBtn.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
     }
 
-    private void checkOwnerOfPost(String user) {
-        if (uid.equals(user)) {
-            btnEditPost.setVisibility(View.VISIBLE);
-            btnEditPost.setOnClickListener(this);
-            btnDeletePost.setVisibility(View.VISIBLE);
-            btnDeletePost.setOnClickListener(this);
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        switch (id) {
+            case R.id.btn_edit_post:
+                enterEditState();
+                break;
+            case R.id.btn_delete_post:
+                AlertDialog alertDialog = new AlertDialog.Builder(this)
+                        .setTitle("Delete Post")
+                        .setMessage("Are you sure you want to delete this post?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                tableDeletePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST).child(postId);
+                                tableDeletePost.removeValue();
+
+                                Toast.makeText(ClickPostActivity.this, "Post Successfully Deleted!", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .create();
+                alertDialog.show();
+                alertDialog.getButton(alertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+                break;
+            case R.id.btn_cancel_post:
+                enterNormalState();
+                break;
+            case R.id.btn_update_post:
+                String message = editPostText.getText().toString();
+                if (!TextUtils.isEmpty(message)) {
+                    tablePost.child(Post.DB_COLUMN_TEXT).setValue(message);
+                    enterNormalState();
+                    Toast.makeText(ClickPostActivity.this, "Post updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ClickPostActivity.this, "Please enter text", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.btn_edit_post) {
-            View viewEditPost = getLayoutInflater().inflate(R.layout.dialog_view_edit_post, null);
-            final EditText inputField = (EditText) viewEditPost.findViewById(R.id.post_edit_text);
-            inputField.setText(text);
+    private void enterEditState() {
+        postText.setVisibility(View.GONE);
+        containerEditDeleteBtn.setVisibility(View.GONE);
 
-            Button btnUpdate = (Button) viewEditPost.findViewById(R.id.action_update);
-            Button btnDismiss = (Button) viewEditPost.findViewById(R.id.action_dismiss);
+        editPostText.setVisibility(View.VISIBLE);
+        containerCancelUpdateBtn.setVisibility(View.VISIBLE);
+    }
 
-            final AlertDialog alertDialog = new AlertDialog.Builder(ClickPostActivity.this)
-                    .setView(viewEditPost)
-                    .setCancelable(false)
-                    .create();
-            alertDialog.show();
+    private void enterNormalState() {
+        postText.setVisibility(View.VISIBLE);
+        containerEditDeleteBtn.setVisibility(View.VISIBLE);
 
-            btnUpdate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    String message = inputField.getText().toString();
-                    if (!TextUtils.isEmpty(message)) {
-                        tablePost.child(Post.DB_COLUMN_TEXT).setValue(message);
-                        Toast.makeText(ClickPostActivity.this, "Post Successfully Updated!", Toast.LENGTH_SHORT).show();
-                        alertDialog.dismiss();
-                    } else {
-                        Toast.makeText(ClickPostActivity.this, "Please enter text", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-
-            btnDismiss.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    alertDialog.dismiss();
-                }
-            });
-
-        } else if (view.getId() == R.id.btn_delete_post) {
-
-            AlertDialog alertDialog = new AlertDialog.Builder(this)
-                    .setTitle("Delete Post")
-                    .setMessage("Are you sure you want to delete this post?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            tableDeletePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST).child(postId);
-                            tableDeletePost.removeValue();
-
-                            Toast.makeText(ClickPostActivity.this, "Post Successfully Deleted!", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create();
-            alertDialog.show();
-            alertDialog.getButton(alertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-            alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        }
+        editPostText.setVisibility(View.GONE);
+        containerCancelUpdateBtn.setVisibility(View.GONE);
     }
 }

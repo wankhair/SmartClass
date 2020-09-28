@@ -38,7 +38,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:hint="@string/your_class_name_here"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -52,7 +54,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences|textMultiLine"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:hint="@string/your_class_description_here"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textStyle="bold"/>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -21,7 +21,6 @@ public class MemberViewHolder extends RecyclerView.ViewHolder implements View.On
         void onMemberItemClick(String memberId);
     }
 
-    private TextView memberCounter;
     private TextView memberName;
     private ClassMember classMember;
 
@@ -29,7 +28,6 @@ public class MemberViewHolder extends RecyclerView.ViewHolder implements View.On
 
     public MemberViewHolder(View itemView, MemberViewHolderClickListener listener) {
         super(itemView);
-        memberCounter = itemView.findViewById(R.id.member_counter);
         memberName = itemView.findViewById(R.id.member_name);
         this.listener = listener;
         itemView.setOnClickListener(this);
@@ -45,7 +43,6 @@ public class MemberViewHolder extends RecyclerView.ViewHolder implements View.On
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     String username = dataSnapshot.child(User.DB_COLUMN_USERNAME).getValue().toString();
-                    memberCounter.setText(String.format("%s.", position + 1));
                     memberName.setText(username);
                 }
             }

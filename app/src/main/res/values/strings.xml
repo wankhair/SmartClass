@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">Smart Class</string>
-
     <string name="welcome_to_smart_class">Welcome to Smart Class</string>
 
+    <!-- Login & Register -->
     <string name="your_email">Your Email…</string>
     <string name="password">Password…</string>
     <string name="your_name">Your Name…</string>
     <string name="your_phone_no">Your Phone No…</string>
-
     <string name="login">Login</string>
     <string name="login_to_account">Login to Account</string>
     <string name="need_account_register_now">Need Account? Register Now</string>
@@ -15,6 +14,7 @@
     <string name="register_account">Register Account</string>
     <string name="already_have_account">Already have Account?</string>
 
+    <!-- Profile -->
     <string name="user_details">User Details</string>
     <string name="username">Username:</string>
     <string name="phone_no">Phone No:</string>
@@ -22,15 +22,44 @@
     <string name="role_student">Student</string>
     <string name="role_lecturer">Lecturer</string>
     <string name="finish_setup">Finish Setup</string>
-
-    <string name="has_uploaded_a_post_on">has uploaded a post on</string>
-
     <string name="colon">:</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="update_profile">Update Profile</string>
 
+    <!-- Class -->
     <string name="class_name">Class Name:</string>
     <string name="class_description">Class Description:</string>
+    <string name="current_members">Current Members :</string>
+    <string name="your_class_name_here">Your class name here</string>
+    <string name="your_class_description_here">Your class description here</string>
     <string name="member_s_limit">Member\'s Limit :</string>
     <string name="add_class">Add Class</string>
+    <string name="join_class">Join Class</string>
+    <string name="generate_qr_code">Generate QR Code</string>
+
+    <!-- Text Button -->
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="submit">Submit</string>
+
+    <!-- Post -->
+    <string name="type_your_post_here">Type your post here</string>
+    <string name="your_post_text_here">Your post text here</string>
+    <string name="has_uploaded_a_post_on">has uploaded a post on</string>
+    <string name="edit_post">Edit Post</string>
+
+    <!-- Assignment -->
+    <string name="assignment_name">Assignment Name:</string>
+    <string name="assignment_description">Assignment Description:</string>
+    <string name="your_assignment_name_here">Your assignment name here</string>
+    <string name="your_assignment_description_here">Your assignment description here</string>
+    <string name="due_date">Due Date:</string>
+    <string name="choose_date">choose date</string>
+    <string name="choose_time">choose time</string>
+    <string name="choose_file">Choose File</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="download_file">Download File</string>
+    <string name="note_please_include_this_qr_code_during_submission">Note: Please include this QR code during submission!</string>
+
 </resources>

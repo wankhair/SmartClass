@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="30dp"
     android:layout_marginEnd="30dp"
-    android:background="@color/colorPrimary"
+    android:background="@color/colorBackground"
     android:padding="12dp"
     android:orientation="vertical">
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="3dp"
-            android:text=":"
+            android:text="@string/colon"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textStyle="bold" />
 
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="3dp"
-            android:text=":"
+            android:text="@string/colon"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textStyle="bold" />
 
@@ -113,7 +113,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginStart="3dp"
-            android:text=":"
+            android:text="@string/colon"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textStyle="bold" />
 
@@ -141,7 +141,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Role : "
+            android:text="@string/role"
             android:textAlignment="center"
             android:textColor="@color/colorBlack"
             android:textSize="14sp" />

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akumine.smartclass.R;
@@ -74,9 +75,7 @@ public class MemberFragment extends Fragment implements MemberViewHolder.MemberV
 
         memberAdapter = new MemberAdapter(null, this);
         RecyclerView recyclerMember = view.findViewById(R.id.recycler_member);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 2,
-                GridLayoutManager.VERTICAL, false);
-        recyclerMember.setLayoutManager(gridLayoutManager);
+        recyclerMember.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerMember.setAdapter(memberAdapter);
 
         setupClassMember();

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.akumine.smartclass.classes.fragment.AssignmentFragment">
+    tools:context=".classes.fragment.AssignmentFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_assign"
@@ -16,11 +16,12 @@
         android:id="@+id/fab_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"
+        android:focusable="true"
         app:fab_colorNormal="@color/colorPrimaryDark"
         app:fab_colorPressed="@color/colorWhite" />
 

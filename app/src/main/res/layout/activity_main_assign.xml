@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.akumine.smartclass.assignment.MainAssignmentActivity">
+    android:background="@color/colorBackground"
+    tools:context=".assignment.MainAssignmentActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -21,10 +22,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
         app:tabBackground="@color/colorPrimaryDark"
-        app:tabIndicatorColor="#ffffff"
+        app:tabIndicatorColor="@color/colorWhite"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="#ffffff"
-        app:tabTextColor="@color/colorBlack">
+        app:tabSelectedTextColor="@color/colorWhite"
+        app:tabTextColor="@color/colorLightGray">
 
     </com.google.android.material.tabs.TabLayout>
 

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    tools:context="com.akumine.smartclass.classes.AddPostActivity">
+    android:background="@color/colorBackground"
+    tools:context=".classes.AddPostActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -19,10 +19,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/container_add_post"
         android:layout_below="@id/toolbar"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/post_image"
@@ -34,39 +35,39 @@
             android:scaleType="centerCrop"
             android:src="@drawable/def_image" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/container_add_post"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:background="@drawable/custom_rectangle"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/post_add_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/camera" />
+
+        <EditText
+            android:id="@+id/post_text"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/custom_rectangle"
-            android:orientation="horizontal">
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:hint="@string/type_your_post_here"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
-            <ImageView
-                android:id="@+id/post_add_image"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="6dp"
-                android:src="@drawable/camera" />
-
-            <EditText
-                android:id="@+id/post_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:hint="Type your post here" />
-
-            <ImageView
-                android:id="@+id/send_post"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="6dp"
-                android:src="@drawable/send_button" />
-
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/send_post"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/send_button" />
 
     </LinearLayout>
 

@@ -221,7 +221,7 @@ public class SubmissionFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onItemClick(int position) {
-        // do nothing as for now
+    public void onSubmissionItemClick(int position) {
+        //do nothing as for now
     }
 }

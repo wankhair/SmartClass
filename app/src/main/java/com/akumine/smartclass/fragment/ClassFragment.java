@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.adapter.ClassAdapter;
 import com.akumine.smartclass.adapter.ClassMemberAdapter;
-import com.akumine.smartclass.classes.AddClassActivity;
-import com.akumine.smartclass.classes.MainClassActivity;
+import com.akumine.smartclass.activity.AddClassActivity;
+import com.akumine.smartclass.activity.MainClassActivity;
 import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Classes;
 import com.akumine.smartclass.util.Constant;
@@ -126,7 +126,7 @@ public class ClassFragment extends Fragment implements View.OnClickListener,
     }
 
     private void getStudent() {
-        fabButton.setIcon(R.drawable.qr_code_icon);
+        fabButton.setIcon(R.drawable.ic_qr_code);
 
         memberAdapter = new ClassMemberAdapter(null, this);
         recyclerClass.setAdapter(memberAdapter);

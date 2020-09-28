@@ -151,8 +151,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         Picasso.get().load(image).into(profileImage);
                         Picasso.get().load(image).into(profileEditImage);
                     } else {
-                        Picasso.get().load(R.drawable.user_vector).into(profileImage);
-                        Picasso.get().load(R.drawable.user_vector).into(profileEditImage);
+                        Picasso.get().load(R.drawable.ic_default_profile).into(profileImage);
+                        Picasso.get().load(R.drawable.ic_default_profile).into(profileEditImage);
                     }
                 }
             }

@@ -24,24 +24,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity">
+        <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".UserInfoActivity" />
-        <activity android:name=".classes.MainClassActivity" />
-        <activity android:name=".assignment.AddAssignmentActivity" />
-        <activity android:name=".assignment.MainAssignmentActivity">
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.UserInfoActivity" />
+        <activity android:name=".activity.MainClassActivity" />
+        <activity android:name=".activity.AddAssignmentActivity" />
+        <activity android:name=".activity.MainAssignmentActivity">
             <intent-filter>
                 <action android:name="com.akumine.smartclass_TARGET_NOTIFICATION_FOR_NEW_ASSIGNMENT" />
                 <action android:name="com.akumine.smartclass_TARGET_NOTIFICATION_FOR_CONFIRM_SUBMISSION" />
@@ -53,8 +53,8 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
-        <activity android:name=".classes.JoinClassActivity" />
-        <activity android:name=".classes.AddClassActivity" />
+        <activity android:name=".activity.JoinClassActivity" />
+        <activity android:name=".activity.AddClassActivity" />
 
         <service android:name=".notification.FirebaseMessagingService">
             <intent-filter>
@@ -62,8 +62,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".classes.AddPostActivity" />
-        <activity android:name=".classes.ClickPostActivity" />
+        <activity android:name=".activity.AddPostActivity" />
+        <activity android:name=".activity.ClickPostActivity" />
 
     </application>
 

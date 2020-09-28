@@ -129,6 +129,6 @@ public class NewsFeedFragment extends Fragment implements PostViewHolder.PostVie
 
     @Override
     public void onPostItemClick(String postId) {
-        //do nothing since student only can view
+        //do nothing since ic_student only can view
     }
 }

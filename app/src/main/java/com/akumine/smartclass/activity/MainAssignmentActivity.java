@@ -1,9 +1,8 @@
-package com.akumine.smartclass.assignment;
+package com.akumine.smartclass.activity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,8 +15,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.adapter.PagerAdapter;
-import com.akumine.smartclass.assignment.fragment.InfoFragment;
-import com.akumine.smartclass.assignment.fragment.SubmissionFragment;
+import com.akumine.smartclass.fragment.InfoAssignFragment;
+import com.akumine.smartclass.fragment.SubmissionFragment;
 import com.akumine.smartclass.model.Notification;
 import com.akumine.smartclass.model.Submission;
 import com.akumine.smartclass.util.Constant;
@@ -44,8 +43,8 @@ public class MainAssignmentActivity extends AppCompatActivity {
     private DatabaseReference tableSubmit;
 
     private int[] tabIcons = {
-            R.drawable.submit_icon,
-            R.drawable.info_2
+            R.drawable.ic_submit_file,
+            R.drawable.ic_info
     };
 
     public static void start(Context context, String uid, String classId, String assignId) {
@@ -84,7 +83,7 @@ public class MainAssignmentActivity extends AppCompatActivity {
 
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         adapter.addFragment(SubmissionFragment.newInstance(uid, assignId), "Submission");
-        adapter.addFragment(InfoFragment.newInstance(uid, classId, assignId), "Info");
+        adapter.addFragment(InfoAssignFragment.newInstance(uid, classId, assignId), "Info");
 
         viewPager = findViewById(R.id.tab_view_pager_assign);
         viewPager.setAdapter(adapter);

@@ -1,4 +1,4 @@
-package com.akumine.smartclass;
+package com.akumine.smartclass.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.akumine.smartclass.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 

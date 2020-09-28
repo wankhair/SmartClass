@@ -1,4 +1,4 @@
-package com.akumine.smartclass.classes.fragment;
+package com.akumine.smartclass.fragment;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 

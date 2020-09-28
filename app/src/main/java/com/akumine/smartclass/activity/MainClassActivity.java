@@ -1,34 +1,24 @@
-package com.akumine.smartclass.classes;
+package com.akumine.smartclass.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.adapter.PagerAdapter;
-import com.akumine.smartclass.classes.fragment.AssignmentFragment;
-import com.akumine.smartclass.classes.fragment.InfoFragment;
-import com.akumine.smartclass.classes.fragment.MemberFragment;
-import com.akumine.smartclass.classes.fragment.PostFragment;
+import com.akumine.smartclass.fragment.AssignmentFragment;
+import com.akumine.smartclass.fragment.InfoClassFragment;
+import com.akumine.smartclass.fragment.MemberFragment;
+import com.akumine.smartclass.fragment.PostFragment;
 import com.akumine.smartclass.util.Constant;
 import com.akumine.smartclass.util.PreferenceUtil;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainClassActivity extends AppCompatActivity {
 
@@ -69,7 +59,7 @@ public class MainClassActivity extends AppCompatActivity {
 
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         adapter.addFragment(AssignmentFragment.newInstance(uid, classId), "Assignment");
-        adapter.addFragment(InfoFragment.newInstance(uid, classId), "Info");
+        adapter.addFragment(InfoClassFragment.newInstance(uid, classId), "Info");
         adapter.addFragment(MemberFragment.newInstance(classId), "Members");
         if (role.equals(Constant.ROLE_LECTURER)) {
             adapter.addFragment(PostFragment.newInstance(uid, classId), "Post");

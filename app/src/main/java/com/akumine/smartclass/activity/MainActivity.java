@@ -1,4 +1,4 @@
-package com.akumine.smartclass;
+package com.akumine.smartclass.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.akumine.smartclass.classes.JoinClassActivity;
+import com.akumine.smartclass.R;
 import com.akumine.smartclass.fragment.ClassFragment;
 import com.akumine.smartclass.fragment.NewsFeedFragment;
 import com.akumine.smartclass.fragment.ProfileFragment;
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
                     bottomNavigationView.getMenu().clear();
 
-                    //load the UI based on the user role
+                    //load the UI based on the ic_user role
                     if (role.equals(Constant.ROLE_LECTURER)) {
                         bottomNavigationView.inflateMenu(R.menu.nav_item_lecturer);
                     } else if (role.equals(Constant.ROLE_STUDENT)) {
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logOut() {
-        // to remove device token when user sign out
+        // to remove device token when ic_user sign out
         DatabaseReference tableUser = FirebaseDatabase.getInstance().getReference().child(User.DB_USER);
         tableUser.child(uid).child(User.DB_COLUMN_DEVICE_TOKEN).setValue(null);
         // to sign out from firebase

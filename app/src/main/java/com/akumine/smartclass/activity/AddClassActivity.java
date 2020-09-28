@@ -1,4 +1,4 @@
-package com.akumine.smartclass.classes;
+package com.akumine.smartclass.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -123,7 +123,7 @@ public class AddClassActivity extends AppCompatActivity implements View.OnClickL
             return false;
         }
 
-        // check if user choose the first list which is "Select your number"
+        // check if ic_user choose the first list which is "Select your number"
         if (selectedItemId == 0) {
             Toast.makeText(AddClassActivity.this, "Member's limit not correct", Toast.LENGTH_SHORT).show();
             return false;

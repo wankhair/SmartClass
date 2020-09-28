@@ -1,4 +1,4 @@
-package com.akumine.smartclass.classes.fragment;
+package com.akumine.smartclass.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.adapter.AssignmentAdapter;
-import com.akumine.smartclass.assignment.AddAssignmentActivity;
-import com.akumine.smartclass.assignment.MainAssignmentActivity;
+import com.akumine.smartclass.activity.AddAssignmentActivity;
+import com.akumine.smartclass.activity.MainAssignmentActivity;
 import com.akumine.smartclass.model.Assignments;
 import com.akumine.smartclass.util.Constant;
 import com.akumine.smartclass.util.PreferenceUtil;

@@ -1,4 +1,4 @@
-package com.akumine.smartclass.classes;
+package com.akumine.smartclass.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;

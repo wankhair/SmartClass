@@ -1,4 +1,4 @@
-package com.akumine.smartclass.assignment.fragment;
+package com.akumine.smartclass.fragment;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -31,7 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.akumine.smartclass.R;
-import com.akumine.smartclass.classes.MainClassActivity;
+import com.akumine.smartclass.activity.MainClassActivity;
 import com.akumine.smartclass.model.Assignments;
 import com.akumine.smartclass.util.Constant;
 import com.akumine.smartclass.util.PermissionUtil;
@@ -57,7 +57,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class InfoFragment extends Fragment implements View.OnClickListener {
+public class InfoAssignFragment extends Fragment implements View.OnClickListener {
 
     private LinearLayout containerInfoAssign;
     private LinearLayout containerEditInfoAssign;
@@ -98,8 +98,8 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
     private Context context;
 
-    public static InfoFragment newInstance(String uid, String class_id, String assignId) {
-        InfoFragment fragment = new InfoFragment();
+    public static InfoAssignFragment newInstance(String uid, String class_id, String assignId) {
+        InfoAssignFragment fragment = new InfoAssignFragment();
         Bundle args = new Bundle();
         args.putString(Constant.ARGS_USER_ID, uid);
         args.putString(Constant.ARGS_CLASS_ID, class_id);

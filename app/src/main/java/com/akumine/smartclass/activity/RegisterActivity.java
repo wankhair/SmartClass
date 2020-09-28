@@ -1,4 +1,4 @@
-package com.akumine.smartclass;
+package com.akumine.smartclass.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.akumine.smartclass.R;
 import com.akumine.smartclass.util.Constant;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

@@ -1,4 +1,4 @@
-package com.akumine.smartclass.classes.fragment;
+package com.akumine.smartclass.fragment;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -26,7 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.akumine.smartclass.MainActivity;
+import com.akumine.smartclass.activity.MainActivity;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Classes;
@@ -52,7 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class InfoFragment extends Fragment implements View.OnClickListener {
+public class InfoClassFragment extends Fragment implements View.OnClickListener {
 
     private String[] list = {"Select number :", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"};
     private LinearLayout containerInfoClass;
@@ -88,8 +88,8 @@ public class InfoFragment extends Fragment implements View.OnClickListener {
 
     private Context context;
 
-    public static InfoFragment newInstance(String uid, String class_id) {
-        InfoFragment fragment = new InfoFragment();
+    public static InfoClassFragment newInstance(String uid, String class_id) {
+        InfoClassFragment fragment = new InfoClassFragment();
         Bundle args = new Bundle();
         args.putString(Constant.ARGS_USER_ID, uid);
         args.putString(Constant.ARGS_CLASS_ID, class_id);

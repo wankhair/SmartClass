@@ -1,4 +1,4 @@
-package com.akumine.smartclass;
+package com.akumine.smartclass.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.User;
 import com.akumine.smartclass.util.Constant;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -99,7 +100,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
                 if (isUserInformationValidated(name, pNo)) {
                     if (filePath == null) {
-                        //save data into db without user profile picture
+                        //save data into db without ic_user profile picture
                         User user = new User(uid, name, email, radioButton.getText().toString(), image, pNo);
                         tableUser.child(uid).setValue(user);
                     } else {

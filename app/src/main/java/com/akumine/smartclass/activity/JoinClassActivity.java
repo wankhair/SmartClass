@@ -1,4 +1,4 @@
-package com.akumine.smartclass.classes;
+package com.akumine.smartclass.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.akumine.smartclass.MainActivity;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.Assignments;
 import com.akumine.smartclass.model.ClassMember;

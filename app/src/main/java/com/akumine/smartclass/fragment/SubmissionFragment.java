@@ -1,4 +1,4 @@
-package com.akumine.smartclass.assignment.fragment;
+package com.akumine.smartclass.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -86,7 +86,7 @@ public class SubmissionFragment extends Fragment implements View.OnClickListener
         }
 
         fabBtn = view.findViewById(R.id.fab_btn);
-        fabBtn.setIcon(R.drawable.qr_code_icon);
+        fabBtn.setIcon(R.drawable.ic_qr_code);
         checked = view.findViewById(R.id.checked);
         unchecked = view.findViewById(R.id.unchecked);
         subChecked = view.findViewById(R.id.sub_checked);

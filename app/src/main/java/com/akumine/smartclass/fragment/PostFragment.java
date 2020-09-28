@@ -1,4 +1,4 @@
-package com.akumine.smartclass.classes.fragment;
+package com.akumine.smartclass.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.adapter.PostAdapter;
-import com.akumine.smartclass.classes.AddPostActivity;
-import com.akumine.smartclass.classes.ClickPostActivity;
+import com.akumine.smartclass.activity.AddPostActivity;
+import com.akumine.smartclass.activity.ClickPostActivity;
 import com.akumine.smartclass.model.Post;
 import com.akumine.smartclass.util.Constant;
 import com.akumine.smartclass.view.PostViewHolder;

@@ -33,7 +33,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/teacher_giving_lecture" />
+                android:src="@drawable/ic_teacher_giving_lecture" />
 
             <TextView
                 android:id="@+id/view_lec_name"
@@ -52,7 +52,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/multiple_users_silhouette_2" />
+                android:src="@drawable/ic_multiple_user" />
 
             <TextView
                 android:id="@+id/class_members"

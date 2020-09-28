@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".RegisterActivity">
+    tools:context=".activity.RegisterActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/student" />
+            android:src="@drawable/ic_student" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginEnd="5dp"
-                android:src="@drawable/password_icon" />
+                android:src="@drawable/ic_password" />
 
             <EditText
                 android:id="@+id/reg_password"

@@ -5,8 +5,8 @@
     android:layout_marginStart="30dp"
     android:layout_marginEnd="30dp"
     android:background="@color/colorBackground"
-    android:padding="12dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="12dp">
 
     <TextView
         android:id="@+id/member_details_title"
@@ -14,16 +14,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:text="Member's Information"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/details_member_image"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"
         android:layout_margin="4dp"
-        android:src="@drawable/user_vector" />
+        android:src="@drawable/ic_default_profile" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +38,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/user" />
+            android:src="@drawable/ic_user" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,7 +107,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/smartphone" />
+            android:src="@drawable/ic_smartphone" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -159,16 +160,16 @@
 
     </LinearLayout>
 
-<!--    <Button-->
-<!--        android:id="@+id/details_member_dismiss_btn"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="35dp"-->
-<!--        android:layout_gravity="right"-->
-<!--        android:layout_marginTop="15dp"-->
-<!--        android:layout_marginBottom="15dp"-->
-<!--        android:layout_marginEnd="10dp"-->
-<!--        android:background="@drawable/rounded_button"-->
-<!--        android:text="Dismiss"-->
-<!--        android:textColor="@color/colorWhite" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/details_member_dismiss_btn"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="35dp"-->
+    <!--        android:layout_gravity="right"-->
+    <!--        android:layout_marginTop="15dp"-->
+    <!--        android:layout_marginBottom="15dp"-->
+    <!--        android:layout_marginEnd="10dp"-->
+    <!--        android:background="@drawable/rounded_button"-->
+    <!--        android:text="Dismiss"-->
+    <!--        android:textColor="@color/colorWhite" />-->
 
 </LinearLayout>

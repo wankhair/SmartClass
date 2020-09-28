@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".assignment.fragment.SubmissionFragment">
+    tools:context=".fragment.SubmissionFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_submission"
@@ -51,7 +51,7 @@
             android:id="@+id/checked"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/clipboards_checked" />
+            android:src="@drawable/ic_clipboards_checked" />
 
         <TextView
             android:id="@+id/sub_checked"
@@ -78,7 +78,7 @@
             android:id="@+id/unchecked"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/clipboards_unchecked" />
+            android:src="@drawable/ic_clipboards_unchecked" />
 
         <TextView
             android:id="@+id/sub_unchecked"

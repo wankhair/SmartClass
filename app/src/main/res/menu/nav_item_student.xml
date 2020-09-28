@@ -7,7 +7,7 @@
         android:title="Classes" />
     <item
         android:id="@+id/nav_news_feed"
-        android:icon="@drawable/post_it"
+        android:icon="@drawable/ic_post_it"
         android:title="News Feed" />
     <item
         android:id="@+id/nav_profile"

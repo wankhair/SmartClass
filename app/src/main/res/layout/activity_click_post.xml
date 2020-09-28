@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".classes.ClickPostActivity">
+    tools:context=".activity.ClickPostActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -33,7 +33,7 @@
             android:adjustViewBounds="true"
             android:background="@drawable/custom_rectangle"
             android:scaleType="centerCrop"
-            android:src="@drawable/def_image" />
+            android:src="@drawable/ic_default_image" />
 
         <TextView
             android:id="@+id/post_text"

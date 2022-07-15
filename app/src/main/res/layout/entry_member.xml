@@ -6,15 +6,15 @@
     android:layout_height="wrap_content"
     android:layout_margin="12dp"
     app:cardBackgroundColor="@color/colorBackgroundCardView"
-    app:cardElevation="8dp"
-    app:cardCornerRadius="10dp">
+    app:cardCornerRadius="10dp"
+    app:cardElevation="8dp">
 
     <TextView
         android:id="@+id/member_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
         android:padding="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Menu"
         tools:text="Wan Muhammad Khair b Mohd Nasir" />
 
 </androidx.cardview.widget.CardView>

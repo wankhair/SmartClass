@@ -263,7 +263,7 @@
             android:text="@string/update"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/colorWhite"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 

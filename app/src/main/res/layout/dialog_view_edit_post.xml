@@ -8,17 +8,17 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_margin="8dp"
-        android:text="@string/edit_post"/>
+        android:text="@string/edit_post"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <EditText
         android:id="@+id/post_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:textSize="16sp"
-        android:inputType="text" />
+        android:inputType="text"
+        android:textSize="16sp" />
 
     <!-- Button -->
     <LinearLayout
@@ -35,9 +35,9 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAllCaps="true"
             android:text="@string/dismiss"
             android:textAlignment="viewEnd"
+            android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <!-- Apply Button -->
@@ -46,9 +46,9 @@
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAllCaps="true"
             android:text="@string/update"
             android:textAlignment="viewEnd"
+            android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </LinearLayout>
 

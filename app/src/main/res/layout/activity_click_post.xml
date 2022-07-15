@@ -20,8 +20,8 @@
         android:id="@+id/container_click_post"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
         android:layout_below="@id/toolbar"
+        android:layout_marginTop="100dp"
         android:orientation="vertical"
         android:padding="16dp">
 

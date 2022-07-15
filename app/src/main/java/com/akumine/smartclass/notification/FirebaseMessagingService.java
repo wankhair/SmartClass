@@ -32,8 +32,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Intent resultIntent = new Intent(clickAction);
         resultIntent.putExtra("assign_id", locationId);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0,
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         String notificationTitle = remoteMessage.getNotification().getTitle();
@@ -42,24 +41,22 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            final int NOTIFICATION_CHANNEL_IMPORTANCE_LEVEL = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel notificationChannel = new NotificationChannel(
                     SMARTCLASS_NOTIFICATION_SERVICE_CHANNEL_ID,
                     "SmartClass",
-                    NOTIFICATION_CHANNEL_IMPORTANCE_LEVEL);
+                    NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(notificationChannel);
         }
         //build notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                this,
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
                 SMARTCLASS_NOTIFICATION_SERVICE_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher_foreground))
                 .setContentTitle(notificationTitle)
                 .setContentText(notificationMessage)
                 .setVibrate(DEFAULT_VIBRATE)
-                .setSound(uri);
-        builder.setContentIntent(pendingIntent);
+                .setSound(uri)
+                .setContentIntent(pendingIntent);
         notificationManager.notify(SMARTCLASS_NOTIFICATION_SERVICE_NOTIFICATION_ID, builder.build());
 
 //        NotificationCompat.Builder builder;

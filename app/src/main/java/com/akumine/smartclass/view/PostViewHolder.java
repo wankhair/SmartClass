@@ -11,10 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.Post;
 import com.akumine.smartclass.model.User;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -50,13 +49,13 @@ public class PostViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.post = post;
         String postUserId = post.getUserId();
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(postUserId);
-        databaseReference.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(postUserId);
+        DatabaseUtil.tableUserWithOneChild(postUserId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String lecName = dataSnapshot.child(User.DB_COLUMN_USERNAME).getValue().toString();
-                    String image = dataSnapshot.child(User.DB_COLUMN_IMAGE).getValue().toString();
+                    String lecName = dataSnapshot.child(User.USERNAME).getValue().toString();
+                    String image = dataSnapshot.child(User.IMAGE).getValue().toString();
 
                     username.setText(lecName);
                     Picasso.get().load(image).into(postProfileImage);

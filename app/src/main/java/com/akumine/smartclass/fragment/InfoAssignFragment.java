@@ -33,13 +33,15 @@ import androidx.fragment.app.Fragment;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.activity.MainClassActivity;
 import com.akumine.smartclass.model.Assignments;
+import com.akumine.smartclass.model.Submission;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.util.PermissionUtil;
 import com.akumine.smartclass.util.PreferenceUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -65,25 +67,20 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
     private LinearLayout containerCancelUpdateBtn;
     private LinearLayout containerDownloadFile;
     private LinearLayout containerViewQrImage;
-
     private TextView assignInfoTitle;
     private TextView assignInfoDesc;
     private TextView dueDateInfo;
-
     private EditText assignEditTitle;
     private EditText assignEditDesc;
     private TextView datePicker;
     private TextView timePicker;
-
     private TextView docName;
     private ImageView imageQr;
-
     private Button btnEdit;
     private Button btnDelete;
     private Button btnCancel;
     private Button btnUpdate;
     private Button btnDownload;
-
     private String assignmentName;
     private String assignmentDescription;
     private String documentUrl;
@@ -91,7 +88,6 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
     private String date;
     private String time;
     private String createDate;
-
     private String uid;
     private String classId;
     private String assignId;
@@ -136,25 +132,20 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
         containerViewQrImage = view.findViewById(R.id.container_qr_image);
         containerEditDeleteBtn = view.findViewById(R.id.container_edit_delete_btn);
         containerCancelUpdateBtn = view.findViewById(R.id.container_cancel_update_btn);
-
         assignInfoTitle = view.findViewById(R.id.assign_info_title);
         assignInfoDesc = view.findViewById(R.id.assign_info_desc);
         dueDateInfo = view.findViewById(R.id.due_date_info);
-
         assignEditTitle = view.findViewById(R.id.assign_edit_title);
         assignEditDesc = view.findViewById(R.id.assign_edit_desc);
         datePicker = view.findViewById(R.id.date_picker);
         timePicker = view.findViewById(R.id.time_picker);
-
         docName = view.findViewById(R.id.document_name);
         imageQr = view.findViewById(R.id.image_qr);
-
         btnDownload = view.findViewById(R.id.btn_download);
         btnEdit = view.findViewById(R.id.btn_edit);
         btnCancel = view.findViewById(R.id.btn_cancel);
         btnDelete = view.findViewById(R.id.btn_delete);
         btnUpdate = view.findViewById(R.id.btn_update);
-
         datePicker.setOnClickListener(this);
         timePicker.setOnClickListener(this);
         btnDownload.setOnClickListener(this);
@@ -179,24 +170,25 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
     }
 
     private void getDataFromDB() {
-        DatabaseReference tableAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT).child(assignId);
-        tableAssignment.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT).child(assignId);
+        DatabaseUtil.tableAssignmentWithOneChild(assignId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    assignId = dataSnapshot.child(Assignments.DB_COLUMN_ID).getValue().toString();
-                    assignmentName = dataSnapshot.child(Assignments.DB_COLUMN_NAME).getValue().toString();
-                    assignmentDescription = dataSnapshot.child(Assignments.DB_COLUMN_DESC).getValue().toString();
-                    documentUrl = dataSnapshot.child(Assignments.DB_COLUMN_DOC_NAME).getValue().toString();
-                    documentName = dataSnapshot.child(Assignments.DB_COLUMN_DOC_URL).getValue().toString();
-                    date = dataSnapshot.child(Assignments.DB_COLUMN_DATE).getValue().toString();
-                    time = dataSnapshot.child(Assignments.DB_COLUMN_TIME).getValue().toString();
-                    createDate = dataSnapshot.child(Assignments.DB_COLUMN_CREATED).getValue().toString();
-                    classId = dataSnapshot.child(Assignments.DB_COLUMN_CLASS_ID).getValue().toString();
+                    assignId = dataSnapshot.child(Assignments.ID).getValue().toString();
+                    assignmentName = dataSnapshot.child(Assignments.ASSIGN_NAME).getValue().toString();
+                    assignmentDescription = dataSnapshot.child(Assignments.ASSIGN_DESC).getValue().toString();
+                    documentUrl = dataSnapshot.child(Assignments.DOCUMENT_NAME).getValue().toString();
+                    documentName = dataSnapshot.child(Assignments.DOCUMENT_URL).getValue().toString();
+                    date = dataSnapshot.child(Assignments.DATE).getValue().toString();
+                    time = dataSnapshot.child(Assignments.TIME).getValue().toString();
+                    createDate = dataSnapshot.child(Assignments.CREATED).getValue().toString();
+                    classId = dataSnapshot.child(Assignments.CLASS_ID).getValue().toString();
 
                     assignInfoTitle.setText(assignmentName);
                     assignInfoDesc.setText(assignmentDescription);
-                    dueDateInfo.setText(date + "  " + time);
+                    dueDateInfo.setText(String.format(Locale.getDefault(), "%s  %s", date, time));
+                    //dueDateInfo.setText(date + "  " + time);
                     datePicker.setText(date);
                     timePicker.setText(time);
                     docName.setText(documentName);
@@ -219,7 +211,7 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
                 setEditMode();
                 break;
             case R.id.btn_cancel:
-                removeEditMode();
+                setNormalMode();
                 break;
             case R.id.btn_delete:
                 showDeleteDialog();
@@ -234,20 +226,20 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
                 getTime(calendar);
                 break;
             case R.id.btn_download:
-                performQrGenerationAndDownloadFile();
+                performDownloadFileAndGenerateQr();
                 break;
         }
     }
 
     private void setEditMode() {
-        containerEditInfoAssign.setVisibility(View.VISIBLE);
-        containerCancelUpdateBtn.setVisibility(View.VISIBLE);
-
         containerInfoAssign.setVisibility(View.GONE);
         containerEditDeleteBtn.setVisibility(View.GONE);
+
+        containerEditInfoAssign.setVisibility(View.VISIBLE);
+        containerCancelUpdateBtn.setVisibility(View.VISIBLE);
     }
 
-    private void removeEditMode() {
+    private void setNormalMode() {
         containerInfoAssign.setVisibility(View.VISIBLE);
         containerEditDeleteBtn.setVisibility(View.VISIBLE);
 
@@ -259,11 +251,32 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setTitle("Delete Assignment")
                 .setMessage("Are you sure you want to delete this assignment?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        DatabaseReference deleteAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT).child(assignId);
-                        deleteAssignment.removeValue();
+                        DatabaseUtil.tableAssignmentWithOneChild(assignId).removeValue();
+                        DatabaseUtil.tableSubmission().addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        Submission submission = snapshot.getValue(Submission.class);
+                                        assert submission != null;
+                                        if (submission.getAssignId().equals(assignId)) {
+                                            DatabaseUtil.tableSubmissionWithOneChild(assignId).removeValue();
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+//                        DatabaseReference deleteAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT).child(assignId);
+//                        deleteAssignment.removeValue();
+//                        FirebaseDatabase.getInstance().getReference(Submission.DB_SUBMIT).child(assignId).removeValue();
 
                         MainClassActivity.start(context, uid, classId);
                         getActivity().finish();
@@ -271,7 +284,7 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
                         Toast.makeText(context, "Assignment Successfully Deleted!", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -283,24 +296,22 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
     }
 
     private void updateAssignmentInformation(Calendar calendar) {
-        String assignTitle = assignEditTitle.getText().toString();
-        String assignDesc = assignEditDesc.getText().toString();
+        String name = assignEditTitle.getText().toString();
+        String desc = assignEditDesc.getText().toString();
+        String date = datePicker.getText().toString();
+        String time = timePicker.getText().toString();
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
         String modify = dateFormat.format(calendar.getTime());
 
-        Assignments assignments = new Assignments(assignId, assignTitle, assignDesc,
-                documentUrl, documentName,
-                datePicker.getText().toString(),
-                timePicker.getText().toString(),
-                createDate, modify, classId);
-
-        DatabaseReference editAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT).child(assignId);
-        editAssignment.setValue(assignments);
+        Assignments assignments = new Assignments(assignId, name, desc, documentUrl, documentName, date, time, createDate, modify, classId);
+        DatabaseUtil.tableAssignmentWithOneChild(assignId).setValue(assignments);
+//        DatabaseReference editAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT).child(assignId);
+//        editAssignment.setValue(assignments);
 
         Toast.makeText(context, "Assignment Information Updated", Toast.LENGTH_SHORT).show();
 
-        removeEditMode();
+        setNormalMode();
     }
 
     private void getDate(Calendar calendar) {
@@ -312,7 +323,8 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
             @Override
             public void onDateSet(DatePicker view, int year,
                                   int monthOfYear, int dayOfMonth) {
-                datePicker.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                datePicker.setText(String.format(Locale.getDefault(), "%s/%s/%s", dayOfMonth, (monthOfYear + 1), year));
+                //datePicker.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
 
             }
         }, year, month, day);
@@ -350,8 +362,9 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
         timePickerDialog.show();
     }
 
-    private void performQrGenerationAndDownloadFile() {
+    private void performDownloadFileAndGenerateQr() {
         if (PermissionUtil.hasWritePermissionToExternalStorage(context)) {
+            // download file
             DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
             Uri uri = Uri.parse(documentUrl);
             DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -362,6 +375,7 @@ public class InfoAssignFragment extends Fragment implements View.OnClickListener
             request.setDestinationInExternalPublicDir("/SmartClass/documents", documentName);
             downloadManager.enqueue(request);
 
+            // generate QR Code
             MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
             try {
                 BitMatrix bitMatrix = multiFormatWriter.encode(classId + "/" + assignId + "/" + uid,

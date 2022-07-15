@@ -21,10 +21,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.Post;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -41,8 +40,8 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
     private Button btnCancelPost;
     private Button btnUpdatePost;
 
-    private DatabaseReference tablePost;
-    private DatabaseReference tableDeletePost;
+//    private DatabaseReference tablePost;
+//    private DatabaseReference tableDeletePost;
 
     private String uid;
     private String postId;
@@ -90,14 +89,14 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
         btnCancelPost.setOnClickListener(this);
         btnUpdatePost.setOnClickListener(this);
 
-        tablePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST).child(postId);
-        tablePost.addValueEventListener(new ValueEventListener() {
+//        tablePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST).child(postId);
+        DatabaseUtil.tablePostWithOneChild(postId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    text = dataSnapshot.child(Post.DB_COLUMN_TEXT).getValue().toString();
-                    String image = dataSnapshot.child(Post.DB_COLUMN_IMAGE_URL).getValue().toString();
-                    String user = dataSnapshot.child(Post.DB_COLUMN_USER_ID).getValue().toString();
+                    text = dataSnapshot.child(Post.TEXT).getValue().toString();
+                    String image = dataSnapshot.child(Post.IMAGE_URL).getValue().toString();
+                    String user = dataSnapshot.child(Post.USER_ID).getValue().toString();
 
                     postText.setText(text);
                     editPostText.setText(text);
@@ -121,23 +120,24 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
         int id = view.getId();
         switch (id) {
             case R.id.btn_edit_post:
-                enterEditState();
+                setEditMode();
                 break;
             case R.id.btn_delete_post:
                 AlertDialog alertDialog = new AlertDialog.Builder(this)
                         .setTitle("Delete Post")
                         .setMessage("Are you sure you want to delete this post?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                tableDeletePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST).child(postId);
-                                tableDeletePost.removeValue();
+                                DatabaseUtil.tablePostWithOneChild(postId).removeValue();
+//                                tableDeletePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST).child(postId);
+//                                tableDeletePost.removeValue();
 
                                 Toast.makeText(ClickPostActivity.this, "Post Successfully Deleted!", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -149,13 +149,14 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
                 alertDialog.getButton(alertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                 break;
             case R.id.btn_cancel_post:
-                enterNormalState();
+                setNormalMode();
                 break;
             case R.id.btn_update_post:
                 String message = editPostText.getText().toString();
                 if (!TextUtils.isEmpty(message)) {
-                    tablePost.child(Post.DB_COLUMN_TEXT).setValue(message);
-                    enterNormalState();
+                    DatabaseUtil.tablePostWithOneChild(Post.TEXT).setValue(message);
+//                    tablePost.child(Post.DB_COLUMN_TEXT).setValue(message);
+                    setNormalMode();
                     Toast.makeText(ClickPostActivity.this, "Post updated", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(ClickPostActivity.this, "Please enter text", Toast.LENGTH_SHORT).show();
@@ -164,7 +165,7 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void enterEditState() {
+    private void setEditMode() {
         postText.setVisibility(View.GONE);
         containerEditDeleteBtn.setVisibility(View.GONE);
 
@@ -172,7 +173,7 @@ public class ClickPostActivity extends AppCompatActivity implements View.OnClick
         containerCancelUpdateBtn.setVisibility(View.VISIBLE);
     }
 
-    private void enterNormalState() {
+    private void setNormalMode() {
         postText.setVisibility(View.VISIBLE);
         containerEditDeleteBtn.setVisibility(View.VISIBLE);
 

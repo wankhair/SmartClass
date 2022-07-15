@@ -19,10 +19,9 @@ import com.akumine.smartclass.model.Classes;
 import com.akumine.smartclass.model.Submission;
 import com.akumine.smartclass.model.User;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
@@ -41,9 +40,9 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
     private String classId;
     private int count = 0;
 
-    private DatabaseReference tableMember;
-    private DatabaseReference tableClass;
-    private DatabaseReference tableSubmit;
+//    private DatabaseReference tableMember;
+//    private DatabaseReference tableClass;
+//    private DatabaseReference tableSubmit;
 
     public static void start(Context context, String uid, String classId) {
         Intent intent = new Intent(context, JoinClassActivity.class);
@@ -96,8 +95,8 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void checkClassMember() {
-        DatabaseReference tableCheckMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
-        tableCheckMember.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableCheckMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
+        DatabaseUtil.tableMember().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 boolean isMemberAlreadyJoin = false;
@@ -115,6 +114,7 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
 
                 if (isMemberAlreadyJoin) {
                     btnJoinClass.setVisibility(View.GONE);
+                    Toast.makeText(JoinClassActivity.this, "You already joined the class", Toast.LENGTH_SHORT).show();
                 } else {
                     btnJoinClass.setVisibility(View.VISIBLE);
                 }
@@ -127,13 +127,13 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setupUserInterface() {
-        tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
-        tableClass.addValueEventListener(new ValueEventListener() {
+//        tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
+        DatabaseUtil.tableClassWithOneChild(classId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String className = dataSnapshot.child(Classes.DB_COLUMN_NAME).getValue().toString();
-                    String classDesc = dataSnapshot.child(Classes.DB_COLUMN_DESC).getValue().toString();
+                    String className = dataSnapshot.child(Classes.CLASS_NAME).getValue().toString();
+                    String classDesc = dataSnapshot.child(Classes.CLASS_DESC).getValue().toString();
 
                     classInfoTitle.setText(className);
                     classInfoDesc.setText(classDesc);
@@ -147,19 +147,20 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void addNewMember() {
-        DatabaseReference tableUser = FirebaseDatabase.getInstance().getReference().child(User.DB_USER).child(uid);
-        tableUser.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableUser = FirebaseDatabase.getInstance().getReference().child(User.DB_USER).child(uid);
+        DatabaseUtil.tableUserWithOneChild(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String username = dataSnapshot.child(User.DB_COLUMN_USERNAME).getValue().toString();
+                String username = dataSnapshot.child(User.USERNAME).getValue().toString();
 
                 Calendar calendar = Calendar.getInstance();
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault());
                 String joined = dateFormat.format(calendar.getTime());
 
                 ClassMember classMember = new ClassMember(uid, username, classId, joined);
-                tableMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
-                tableMember.push().setValue(classMember);
+                DatabaseUtil.tableMember().push().setValue(classMember);
+//                tableMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
+//                tableMember.push().setValue(classMember);
             }
 
             @Override
@@ -169,8 +170,8 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void countMember() {
-        DatabaseReference tableCountMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
-        tableCountMember.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableCountMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
+        DatabaseUtil.tableMember().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -183,8 +184,10 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
                         }
                     }
 
-                    tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
-                    tableClass.child(Classes.DB_COLUMN_CURRENT_USER).setValue(String.valueOf(count));
+                    DatabaseUtil.tableClassWithTwoChild(classId, Classes.CURRENT_USER)
+                            .setValue(String.valueOf(count));
+//                    tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
+//                    tableClass.child(Classes.DB_COLUMN_CURRENT_USER).setValue(String.valueOf(count));
                 }
             }
 
@@ -195,10 +198,10 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void setAssignmentForNewMember() {
-        tableSubmit = FirebaseDatabase.getInstance().getReference().child(Submission.DB_SUBMIT);
+//        tableSubmit = FirebaseDatabase.getInstance().getReference().child(Submission.DB_SUBMIT);
 
-        DatabaseReference tableAssignment = FirebaseDatabase.getInstance().getReference().child(Assignments.DB_ASSIGNMENT);
-        tableAssignment.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableAssignment = FirebaseDatabase.getInstance().getReference().child(Assignments.DB_ASSIGNMENT);
+        DatabaseUtil.tableAssignment().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -208,8 +211,9 @@ public class JoinClassActivity extends AppCompatActivity implements View.OnClick
                         if (assignments.getClassId().equals(classId)) {
                             String id = UUID.randomUUID().toString();
 
-                            Submission submission = new Submission(uid, assignments.getId(), "Not Submitted");
-                            tableSubmit.child(id).setValue(submission);
+                            Submission submission = new Submission(uid, assignments.getId(), Constant.NOT_SUBMITTED);
+                            DatabaseUtil.tableSubmissionWithOneChild(id).setValue(submission);
+//                            tableSubmit.child(id).setValue(submission);
                         }
                     }
                 }

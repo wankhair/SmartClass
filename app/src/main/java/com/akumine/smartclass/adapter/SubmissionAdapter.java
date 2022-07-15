@@ -20,15 +20,12 @@ public class SubmissionAdapter extends RecyclerView.Adapter<SubmissionViewHolder
 
     private List<Submission> submissionList;
     private SubmissionViewHolder.SubmissionViewHolderClickListener listener;
-    private Context context;
 
-    public SubmissionAdapter(Context context,
-                             @Nullable List<Submission> submissionList,
+    public SubmissionAdapter(@Nullable List<Submission> submissionList,
                              @NonNull SubmissionViewHolder.SubmissionViewHolderClickListener listener) {
         if (submissionList == null) {
             submissionList = new ArrayList<>();
         }
-        this.context = context;
         this.submissionList = submissionList;
         this.listener = listener;
     }
@@ -50,7 +47,7 @@ public class SubmissionAdapter extends RecyclerView.Adapter<SubmissionViewHolder
     @NonNull
     @Override
     public SubmissionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(viewType, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
         return new SubmissionViewHolder(view, listener);
     }
 

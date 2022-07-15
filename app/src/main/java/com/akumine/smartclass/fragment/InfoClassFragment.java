@@ -28,15 +28,13 @@ import androidx.fragment.app.Fragment;
 
 import com.akumine.smartclass.activity.MainActivity;
 import com.akumine.smartclass.R;
-import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Classes;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.util.PermissionUtil;
 import com.akumine.smartclass.util.PreferenceUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -72,7 +70,6 @@ public class InfoClassFragment extends Fragment implements View.OnClickListener 
     private Button btnDelete;
     private Button btnCancel;
     private Button btnUpdate;
-
     private String uid;
     private String classId;
     private String className;
@@ -81,8 +78,8 @@ public class InfoClassFragment extends Fragment implements View.OnClickListener 
     private String currentUser;
     private String maxUser;
 
-    private DatabaseReference deleteClass;
-    private DatabaseReference deleteClassMember;
+//    private DatabaseReference deleteClass;
+//    private DatabaseReference deleteClassMember;
 
     private boolean isQrGenerated = false;
 
@@ -156,21 +153,22 @@ public class InfoClassFragment extends Fragment implements View.OnClickListener 
     }
 
     private void getClassDetails(final ArrayAdapter<String> adapter) {
-        DatabaseReference tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
-        tableClass.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
+        DatabaseUtil.tableClassWithOneChild(classId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    classId = dataSnapshot.child(Classes.DB_COLUMN_ID).getValue().toString();
-                    className = dataSnapshot.child(Classes.DB_COLUMN_NAME).getValue().toString();
-                    classDesc = dataSnapshot.child(Classes.DB_COLUMN_DESC).getValue().toString();
-                    createDate = dataSnapshot.child(Classes.DB_COLUMN_CREATED).getValue().toString();
-                    currentUser = dataSnapshot.child(Classes.DB_COLUMN_CURRENT_USER).getValue().toString();
-                    maxUser = dataSnapshot.child(Classes.DB_COLUMN_MAX_USER).getValue().toString();
+                    classId = dataSnapshot.child(Classes.ID).getValue().toString();
+                    className = dataSnapshot.child(Classes.CLASS_NAME).getValue().toString();
+                    classDesc = dataSnapshot.child(Classes.CLASS_DESC).getValue().toString();
+                    createDate = dataSnapshot.child(Classes.CREATED).getValue().toString();
+                    currentUser = dataSnapshot.child(Classes.CURRENT_USER).getValue().toString();
+                    maxUser = dataSnapshot.child(Classes.MAX_USER).getValue().toString();
 
                     classInfoTitle.setText(className);
                     classInfoDesc.setText(classDesc);
-                    classMembers.setText(currentUser + " Members");
+                    classMembers.setText(String.format(Locale.getDefault(), "%s Members", currentUser));
+                    //classMembers.setText(currentUser + " Members");
                     classEditTitle.setText(className);
                     classEditDesc.setText(classDesc);
 
@@ -199,7 +197,7 @@ public class InfoClassFragment extends Fragment implements View.OnClickListener 
                 setEditMode();
                 break;
             case R.id.btn_cancel:
-                removeEditMode();
+                setNormalMode();
                 break;
             case R.id.btn_delete:
                 showDeleteDialogPopup();
@@ -254,7 +252,7 @@ public class InfoClassFragment extends Fragment implements View.OnClickListener 
         containerCancelUpdateBtn.setVisibility(View.VISIBLE);
     }
 
-    private void removeEditMode() {
+    private void setNormalMode() {
         containerInfoClass.setVisibility(View.VISIBLE);
         containerImageQR.setVisibility(View.VISIBLE);
         containerEditDeleteBtn.setVisibility(View.VISIBLE);
@@ -267,21 +265,22 @@ public class InfoClassFragment extends Fragment implements View.OnClickListener 
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setTitle("Delete Class")
                 .setMessage("Are you sure you want to delete this class?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
-                        deleteClass.removeValue();
-
-                        deleteClassMember = FirebaseDatabase.getInstance().getReference(ClassMember.DB_CLASSMEMBER).child(classId);
-                        deleteClassMember.removeValue();
+                        DatabaseUtil.tableClassWithOneChild(classId).removeValue();
+                        DatabaseUtil.tableMemberWithOneChild(classId).removeValue();
+//                        deleteClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
+//                        deleteClass.removeValue();
+//                        deleteClassMember = FirebaseDatabase.getInstance().getReference(ClassMember.DB_CLASSMEMBER).child(classId);
+//                        deleteClassMember.removeValue();
 
                         MainActivity.start(context, uid);
 
                         Toast.makeText(context, "Class Successfully Deleted!", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -304,12 +303,13 @@ public class InfoClassFragment extends Fragment implements View.OnClickListener 
 
         Classes classes = new Classes(classId, classTitle, classDesc, uid, createDate, modify, currentUser, selected);
 
-        DatabaseReference updateClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
-        updateClass.setValue(classes);
+        DatabaseUtil.tableClassWithOneChild(classId).setValue(classes);
+//        DatabaseReference updateClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
+//        updateClass.setValue(classes);
 
         Toast.makeText(context, "Class Information Updated", Toast.LENGTH_SHORT).show();
 
-        removeEditMode();
+        setNormalMode();
     }
 
     @TargetApi(Build.VERSION_CODES.Q)

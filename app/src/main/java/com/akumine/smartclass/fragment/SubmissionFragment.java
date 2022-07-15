@@ -21,6 +21,7 @@ import com.akumine.smartclass.adapter.SubmissionAdapter;
 import com.akumine.smartclass.model.Notification;
 import com.akumine.smartclass.model.Submission;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.util.PermissionUtil;
 import com.akumine.smartclass.util.PreferenceUtil;
 import com.akumine.smartclass.view.SubmissionViewHolder;
@@ -44,14 +45,14 @@ public class SubmissionFragment extends Fragment implements View.OnClickListener
     private TextView subChecked;
     private TextView subUnchecked;
     private FloatingActionButton fabBtn;
-    private Button btnConfirmAll;
+    //private Button btnConfirmAll;
 
     private String uid;
     private String assignId;
     private String role;
 
-    private DatabaseReference tableSubmit;
-    private DatabaseReference tableNotify;
+//    private DatabaseReference tableSubmit;
+    //private DatabaseReference tableNotify;
 
     private Context context;
 
@@ -91,19 +92,19 @@ public class SubmissionFragment extends Fragment implements View.OnClickListener
         unchecked = view.findViewById(R.id.unchecked);
         subChecked = view.findViewById(R.id.sub_checked);
         subUnchecked = view.findViewById(R.id.sub_unchecked);
-        btnConfirmAll = view.findViewById(R.id.btn_confirm_all);
+        //btnConfirmAll = view.findViewById(R.id.btn_confirm_all);
         fabBtn.setOnClickListener(this);
-        btnConfirmAll.setOnClickListener(this);
+        //btnConfirmAll.setOnClickListener(this);
 
         fabBtn.setVisibility(View.GONE);
         checked.setVisibility(View.GONE);
         unchecked.setVisibility(View.GONE);
         subChecked.setVisibility(View.GONE);
         subUnchecked.setVisibility(View.GONE);
-        btnConfirmAll.setVisibility(View.GONE);
+        //btnConfirmAll.setVisibility(View.GONE);
 
-        tableSubmit = FirebaseDatabase.getInstance().getReference(Submission.DB_SUBMIT);
-        tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
+//        tableSubmit = FirebaseDatabase.getInstance().getReference(Submission.DB_SUBMIT);
+        //tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
 
         role = PreferenceUtil.getRole(context);
 
@@ -127,49 +128,49 @@ public class SubmissionFragment extends Fragment implements View.OnClickListener
                     Toast.makeText(context, "Camera Permission Not Granted\nPlease go to Setting", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.btn_confirm_all:
-                tableSubmit.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                Submission submission1 = snapshot.getValue(Submission.class);
-                                if (submission1 != null && submission1.getAssignId().equals(assignId)) {
-                                    if (submission1.getStatus().equals("Not Submitted")) {
-                                        String id = snapshot.getKey();
-                                        String memberId = submission1.getMemberId();
-                                        if (id != null) {
-                                            tableSubmit.child(id).child(Submission.DB_COLUMN_STATUS).setValue("Submitted");
-                                        }
-
-                                        Notification notification = new Notification("Confirm Submission", uid, assignId);
-                                        tableNotify.child(memberId).push().setValue(notification);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-                break;
+//            case R.id.btn_confirm_all:
+//                tableSubmit.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        if (dataSnapshot.exists()) {
+//                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+//                                Submission submission1 = snapshot.getValue(Submission.class);
+//                                if (submission1 != null && submission1.getAssignId().equals(assignId)) {
+//                                    if (submission1.getStatus().equals("Not Submitted")) {
+//                                        String id = snapshot.getKey();
+//                                        String memberId = submission1.getMemberId();
+//                                        if (id != null) {
+//                                            tableSubmit.child(id).child(Submission.DB_COLUMN_STATUS).setValue("Submitted");
+//                                        }
+//
+//                                        Notification notification = new Notification("Confirm Submission", uid, assignId);
+//                                        tableNotify.child(memberId).push().setValue(notification);
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//                    }
+//                });
+//                break;
         }
     }
 
     private void setUiBasedOnRole(View view) {
         if (role.equals(Constant.ROLE_LECTURER)) {
             fabBtn.setVisibility(View.VISIBLE);
-            btnConfirmAll.setVisibility(View.VISIBLE);
+            //btnConfirmAll.setVisibility(View.VISIBLE);
 
-            submissionAdapter = new SubmissionAdapter(context, null, this);
+            submissionAdapter = new SubmissionAdapter(null, this);
 
             RecyclerView recyclerSubmit = view.findViewById(R.id.recycler_submission);
             recyclerSubmit.setLayoutManager(new LinearLayoutManager(context));
             recyclerSubmit.setAdapter(submissionAdapter);
 
-            tableSubmit.addValueEventListener(new ValueEventListener() {
+            DatabaseUtil.tableSubmission().addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
@@ -193,18 +194,20 @@ public class SubmissionFragment extends Fragment implements View.OnClickListener
                 }
             });
         } else if (role.equals(Constant.ROLE_STUDENT)) {
-            tableSubmit.addValueEventListener(new ValueEventListener() {
+            DatabaseUtil.tableSubmission().addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot.exists()) {
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Submission submission = snapshot.getValue(Submission.class);
-                            if (submission != null && submission.getMemberId().equals(uid)) {
-                                if (submission.getStatus().equals("Not Submitted")) {
+                            if (submission != null
+                                    && submission.getMemberId().equals(uid)
+                                    && submission.getAssignId().contains(assignId)) {
+                                if (submission.getStatus().equals(Constant.NOT_SUBMITTED)) {
                                     unchecked.setVisibility(View.VISIBLE);
                                     subUnchecked.setVisibility(View.VISIBLE);
 
-                                } else if (submission.getStatus().equals("Submitted")) {
+                                } else if (submission.getStatus().equals(Constant.SUBMITTED)) {
                                     checked.setVisibility(View.VISIBLE);
                                     subChecked.setVisibility(View.VISIBLE);
                                 }

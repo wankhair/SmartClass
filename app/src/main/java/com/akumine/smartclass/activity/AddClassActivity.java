@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.Classes;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -70,7 +71,6 @@ public class AddClassActivity extends AppCompatActivity implements View.OnClickL
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, list);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMember.setAdapter(adapter);
-
     }
 
     @Override
@@ -89,15 +89,13 @@ public class AddClassActivity extends AppCompatActivity implements View.OnClickL
                 String selected = String.valueOf(spinnerMember.getSelectedItem());
 
                 Classes classes = new Classes(id, name, desc, uid, created, modify, "0", selected);
-
-                DatabaseReference tableClass = FirebaseDatabase.getInstance().getReference().child(Classes.DB_CLASS);
-                tableClass.child(id).setValue(classes);
+                DatabaseUtil.tableClassWithOneChild(id).setValue(classes);
+//                DatabaseReference tableClass = FirebaseDatabase.getInstance().getReference().child(Classes.DB_CLASS);
+//                tableClass.child(id).setValue(classes);
 
                 Toast.makeText(AddClassActivity.this, "Class Successfully Added", Toast.LENGTH_SHORT).show();
                 finish();
             }
-
-
         }
     }
 
@@ -123,7 +121,7 @@ public class AddClassActivity extends AppCompatActivity implements View.OnClickL
             return false;
         }
 
-        // check if ic_user choose the first list which is "Select your number"
+        // check if user choose the first list which is "Select your number"
         if (selectedItemId == 0) {
             Toast.makeText(AddClassActivity.this, "Member's limit not correct", Toast.LENGTH_SHORT).show();
             return false;

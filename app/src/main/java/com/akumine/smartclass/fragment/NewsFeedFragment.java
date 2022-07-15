@@ -18,11 +18,10 @@ import com.akumine.smartclass.adapter.PostAdapter;
 import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Post;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.view.PostViewHolder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -79,8 +78,8 @@ public class NewsFeedFragment extends Fragment implements PostViewHolder.PostVie
     }
 
     private void getClassIdFromClassMember() {
-        DatabaseReference tableClassMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
-        Query queryClassMember = tableClassMember.orderByChild(ClassMember.DB_COLUMN_MEMBER_ID).equalTo(uid);
+//        DatabaseReference tableClassMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
+        Query queryClassMember = DatabaseUtil.tableMember().orderByChild(ClassMember.MEMBER_ID).equalTo(uid);
         queryClassMember.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -103,8 +102,8 @@ public class NewsFeedFragment extends Fragment implements PostViewHolder.PostVie
     }
 
     private void getPostItems(String classId) {
-        DatabaseReference tablePost = FirebaseDatabase.getInstance().getReference().child(Post.DB_POST);
-        Query queryPost = tablePost.orderByChild(Post.DB_COLUMN_CLASS_ID).equalTo(classId);
+//        DatabaseReference tablePost = FirebaseDatabase.getInstance().getReference().child(Post.DB_POST);
+        Query queryPost = DatabaseUtil.tablePost().orderByChild(Post.CLASS_ID).equalTo(classId);
         queryPost.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -129,6 +128,6 @@ public class NewsFeedFragment extends Fragment implements PostViewHolder.PostVie
 
     @Override
     public void onPostItemClick(String postId) {
-        //do nothing since ic_student only can view
+        //do nothing since student only can view
     }
 }

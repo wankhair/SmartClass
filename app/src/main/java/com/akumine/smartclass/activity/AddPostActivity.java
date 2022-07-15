@@ -22,6 +22,7 @@ import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Notification;
 import com.akumine.smartclass.model.Post;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.util.PermissionUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -57,9 +58,9 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog progressDialog;
 
     private Uri targetUri;
-    private DatabaseReference tableNotify;
-    private DatabaseReference tablePost;
-    private DatabaseReference tableClassMember;
+//    private DatabaseReference tableNotify;
+//    private DatabaseReference tablePost;
+//    private DatabaseReference tableClassMember;
     private StorageReference postImagesReference;
 
     public static void start(Context context, String uid, String classId) {
@@ -91,8 +92,8 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
         classId = intent.getStringExtra(Constant.EXTRA_CLASS_ID);
 
         postImagesReference = FirebaseStorage.getInstance().getReference();
-        tablePost = FirebaseDatabase.getInstance().getReference().child(Post.DB_POST);
-        tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
+//        tablePost = FirebaseDatabase.getInstance().getReference().child(Post.DB_POST);
+//        tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
 
         postEditText = (EditText) findViewById(R.id.post_text);
         postImage = (ImageView) findViewById(R.id.post_image);
@@ -179,10 +180,11 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
                         created = dateFormat.format(calendar.getTime());
 
                         Post post = new Post(id, postText, imageUrl, saveCurrentDate, saveCurrentTime, classId, uid, created);
-                        tablePost.child(id).setValue(post);
+                        DatabaseUtil.tablePostWithOneChild(id).setValue(post);
+//                        tablePost.child(id).setValue(post);
 
-                        tableClassMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
-                        tableClassMember.addValueEventListener(new ValueEventListener() {
+//                        tableClassMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
+                        DatabaseUtil.tableMember().addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
@@ -193,7 +195,8 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
                                             String memberId = member.getMemberId();
 
                                             Notification notification = new Notification("New Post", uid, classId);
-                                            tableNotify.child(memberId).push().setValue(notification);
+                                            DatabaseUtil.tableNotificationWithOneChild(memberId).push().setValue(notification);
+//                                            tableNotify.child(memberId).push().setValue(notification);
                                         }
                                     }
                                 }
@@ -215,6 +218,7 @@ public class AddPostActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(AddPostActivity.this, "Post not successfully uploaded", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override

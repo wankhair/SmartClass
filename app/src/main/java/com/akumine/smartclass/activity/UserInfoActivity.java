@@ -22,11 +22,10 @@ import androidx.appcompat.widget.Toolbar;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.User;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,7 +39,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     private static final String TAG = "UserInfoActivity";
 
-    private DatabaseReference tableUser;
     private StorageReference storageReference;
 
     private ImageView profileImage;
@@ -86,7 +84,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         submit.setOnClickListener(this);
 
         storageReference = FirebaseStorage.getInstance().getReference();
-        tableUser = FirebaseDatabase.getInstance().getReference().child(User.DB_USER);
     }
 
     @Override
@@ -100,9 +97,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
                 if (isUserInformationValidated(name, pNo)) {
                     if (filePath == null) {
-                        //save data into db without ic_user profile picture
+                        //save data into db without user profile picture
                         User user = new User(uid, name, email, radioButton.getText().toString(), image, pNo);
-                        tableUser.child(uid).setValue(user);
+                        DatabaseUtil.tableUserWithOneChild(uid).setValue(user);
                     } else {
                         //save data and image url into db
                         updateUserInformation(name, pNo, radioButton);
@@ -153,7 +150,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void updateUserInformation(final String name, final String pNo, final RadioButton radioButton) {
-        //to compress image
+        // compress image
         Bitmap bitmap = null;
         try {
             bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
@@ -166,7 +163,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
         byte[] fileInBytes = stream.toByteArray();
 
-        //to store image into firebase
+        // store image into firebase
         final StorageReference reference = storageReference.child("User Image/" + uid);
         reference.putBytes(fileInBytes).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -177,7 +174,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         image = uri.toString();
 
                         User user = new User(uid, name, email, radioButton.getText().toString(), image, pNo);
-                        tableUser.child(uid).setValue(user);
+                        DatabaseUtil.tableUserWithOneChild(uid).setValue(user);
 
                         FirebaseInstanceId.getInstance().getInstanceId()
                                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -186,11 +183,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                                         if (task.isSuccessful()) {
                                             //add device token
                                             String deviceToken = task.getResult().getToken();
-                                            tableUser = FirebaseDatabase.getInstance().getReference()
-                                                    .child(User.DB_USER);
-                                            tableUser.child(uid)
-                                                    .child(User.DB_COLUMN_DEVICE_TOKEN)
-                                                    .setValue(deviceToken);
+                                            DatabaseUtil.tableUserWithTwoChild(uid, User.DEVICE_TOKEN).setValue(deviceToken);
                                         } else {
                                             Log.w(TAG, "getInstanceId failed", task.getException());
                                         }
@@ -214,6 +207,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(UserInfoActivity.this, "Fill in all information above first", Toast.LENGTH_SHORT).show();
+        Toast.makeText(UserInfoActivity.this, "Required to fill in all information", Toast.LENGTH_SHORT).show();
     }
 }

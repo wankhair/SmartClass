@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 checkIfUserAlreadyLogin();
             }
-        }, 2 * 1000); // wait for 2 seconds
+        }, 1500); // wait for 1.5 seconds
     }
 
     @Override

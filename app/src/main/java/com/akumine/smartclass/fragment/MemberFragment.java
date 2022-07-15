@@ -22,11 +22,10 @@ import com.akumine.smartclass.adapter.MemberAdapter;
 import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.User;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.view.MemberViewHolder;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
@@ -81,8 +80,8 @@ public class MemberFragment extends Fragment implements MemberViewHolder.MemberV
     }
 
     private void setupClassMember() {
-        DatabaseReference tableMember = FirebaseDatabase.getInstance().getReference(ClassMember.DB_CLASSMEMBER);
-        Query query = tableMember.orderByChild(ClassMember.DB_COLUMN_CLASS_ID).equalTo(classId);
+//        DatabaseReference tableMember = FirebaseDatabase.getInstance().getReference(ClassMember.DB_CLASSMEMBER);
+        Query query = DatabaseUtil.tableMember().orderByChild(ClassMember.CLASS_ID).equalTo(classId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -112,7 +111,7 @@ public class MemberFragment extends Fragment implements MemberViewHolder.MemberV
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 .setView(viewDetailMemberList)
                 .setCancelable(true)
-                .setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.dismiss), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -130,16 +129,16 @@ public class MemberFragment extends Fragment implements MemberViewHolder.MemberV
         final TextView memberPhoneNo = (TextView) viewDetailMemberList.findViewById(R.id.details_member_phone_no);
         final TextView memberRole = (TextView) viewDetailMemberList.findViewById(R.id.details_member_role);
 
-        DatabaseReference tableMemberDetail = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(memberId);
-        tableMemberDetail.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableMemberDetail = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(memberId);
+        DatabaseUtil.tableUserWithOneChild(memberId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String username = dataSnapshot.child(User.DB_COLUMN_USERNAME).getValue().toString();
-                    String email = dataSnapshot.child(User.DB_COLUMN_EMAIL).getValue().toString();
-                    String imageUrl = dataSnapshot.child(User.DB_COLUMN_IMAGE).getValue().toString();
-                    String phone = dataSnapshot.child(User.DB_COLUMN_PHONE).getValue().toString();
-                    String userRole = dataSnapshot.child(User.DB_COLUMN_ROLE).getValue().toString();
+                    String username = dataSnapshot.child(User.USERNAME).getValue().toString();
+                    String email = dataSnapshot.child(User.EMAIL).getValue().toString();
+                    String imageUrl = dataSnapshot.child(User.IMAGE).getValue().toString();
+                    String phone = dataSnapshot.child(User.PHONE).getValue().toString();
+                    String userRole = dataSnapshot.child(User.ROLE).getValue().toString();
 
                     Picasso.get().load(imageUrl).into(memberImage);
                     memberName.setText(username);

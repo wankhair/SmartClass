@@ -2,10 +2,10 @@ package com.akumine.smartclass.model;
 
 public class Notification {
 
-    public static final String DB_NOTIFICATION = "Notifications";
-    public static final String DB_COLUMN_TYPE = "type";
-    public static final String DB_COLUMN_FROM = "from";
-    public static final String DB_COLUMN_LOCATION_ID = "locationId";
+    public static final String TABLE_NOTIFICATION = "Notifications";
+    public static final String TYPE = "type";
+    public static final String FROM = "from";
+    public static final String LOCATION_ID = "locationId";
 
     private String type;
     private String from;
@@ -20,7 +20,6 @@ public class Notification {
         this.locationId = locationId;
     }
 
-    //region Getter
     public String getType() {
         return type;
     }
@@ -32,9 +31,7 @@ public class Notification {
     public String getLocationId() {
         return locationId;
     }
-    //endregion
 
-    //region Setter
     public void setType(String type) {
         this.type = type;
     }
@@ -46,6 +43,5 @@ public class Notification {
     public void setLocationId(String locationId) {
         this.locationId = locationId;
     }
-    //endregion
 }
 

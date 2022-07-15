@@ -2,14 +2,14 @@ package com.akumine.smartclass.model;
 
 public class User {
 
-    public static final String DB_USER = "User";
-    public static final String DB_COLUMN_ID = "id";
-    public static final String DB_COLUMN_USERNAME = "username";
-    public static final String DB_COLUMN_EMAIL = "email";
-    public static final String DB_COLUMN_ROLE = "role";
-    public static final String DB_COLUMN_IMAGE = "image";
-    public static final String DB_COLUMN_PHONE = "phone";
-    public static final String DB_COLUMN_DEVICE_TOKEN = "deviceToken";
+    public static final String TABLE_USER = "User";
+    public static final String ID = "id";
+    public static final String USERNAME = "username";
+    public static final String EMAIL = "email";
+    public static final String ROLE = "role";
+    public static final String IMAGE = "image";
+    public static final String PHONE = "phone";
+    public static final String DEVICE_TOKEN = "deviceToken";
 
     private String id;
     private String username;
@@ -34,44 +34,44 @@ public class User {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getRole() {
         return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public String getPhone() {
         return phone;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public void setPhone(String phone) {

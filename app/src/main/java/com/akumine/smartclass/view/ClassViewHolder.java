@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.Classes;
 import com.akumine.smartclass.model.User;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Locale;
 
 public class ClassViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -40,14 +41,15 @@ public class ClassViewHolder extends RecyclerView.ViewHolder implements View.OnC
     public void bindData(Classes classes) {
         classId = classes.getId();
         classTitle.setText(classes.getClassName());
-        classMember.setText(classes.getCurrentUser() + "/" + classes.getMaxUser());
+        classMember.setText(String.format(Locale.getDefault(), "%s/%s", classes.getCurrentUser(), classes.getMaxUser()));
+        //classMember.setText(classes.getCurrentUser() + "/" + classes.getMaxUser());
 
-        DatabaseReference tableUser = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(classes.getLecturerId());
-        tableUser.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableUser = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(classes.getLecturerId());
+        DatabaseUtil.tableUserWithOneChild(classes.getLecturerId()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    String name = dataSnapshot.child(User.DB_COLUMN_USERNAME).getValue().toString();
+                    String name = dataSnapshot.child(User.USERNAME).getValue().toString();
                     lecName.setText(name);
                 }
             }

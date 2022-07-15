@@ -26,6 +26,7 @@ import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Notification;
 import com.akumine.smartclass.model.Submission;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.util.PermissionUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,11 +66,11 @@ public class AddAssignmentActivity extends AppCompatActivity implements View.OnC
     private String classId;
 
     private Uri pdfUri;
-    private DatabaseReference tableAssignment;
-    private DatabaseReference tableNotify;
-    private DatabaseReference tableSubmit;
-    private DatabaseReference tableMember;
-    private StorageReference storageReference;
+//    private DatabaseReference tableAssignment;
+//    private DatabaseReference tableNotify;
+//    private DatabaseReference tableSubmit;
+//    private DatabaseReference tableMember;
+//    private StorageReference storageReference;
     private ProgressDialog progressDialog;
 
     public static void start(Context context, String uid, String classId) {
@@ -100,10 +101,10 @@ public class AddAssignmentActivity extends AppCompatActivity implements View.OnC
         uid = intent.getStringExtra(Constant.EXTRA_USER_ID);
         classId = intent.getStringExtra(Constant.EXTRA_CLASS_ID);
 
-        storageReference = FirebaseStorage.getInstance().getReference();
-        tableAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT);
-        tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
-        tableSubmit = FirebaseDatabase.getInstance().getReference().child(Submission.DB_SUBMIT);
+//        storageReference = FirebaseStorage.getInstance().getReference();
+//        tableAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT);
+//        tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
+//        tableSubmit = FirebaseDatabase.getInstance().getReference().child(Submission.DB_SUBMIT);
 
         assignName = (EditText) findViewById(R.id.assign_name);
         assignDesc = (EditText) findViewById(R.id.assign_desc);
@@ -155,7 +156,7 @@ public class AddAssignmentActivity extends AppCompatActivity implements View.OnC
             @Override
             public void onDateSet(DatePicker view, int year,
                                   int monthOfYear, int dayOfMonth) {
-                assignDate.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
+                assignDate.setText(String.format(Locale.getDefault(), "%s/%s/%s", dayOfMonth, (monthOfYear + 1), year));
                 assignDate.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
 
             }
@@ -171,23 +172,18 @@ public class AddAssignmentActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                // to parse time into Date
                 String time = hourOfDay + ":" + minute;
-
-                SimpleDateFormat fmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
                 Date date = null;
                 try {
-                    date = fmt.parse(time);
+                    date = new SimpleDateFormat("HH:mm", Locale.getDefault()).parse(time);
                 } catch (ParseException e) {
-
                     e.printStackTrace();
                 }
 
-                SimpleDateFormat fmtOut = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
-
+                // get date in desired format
                 assert date != null;
-                String formattedTime = fmtOut.format(date);
-
-                assignTime.setText(formattedTime);
+                assignTime.setText(new SimpleDateFormat("hh:mm aa", Locale.getDefault()).format(date));
                 assignTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorBlack));
 
             }
@@ -229,55 +225,60 @@ public class AddAssignmentActivity extends AppCompatActivity implements View.OnC
         final String date = assignDate.getText().toString();
         final String time = assignTime.getText().toString();
 
-        final StorageReference ref = storageReference.child("Uploads/" + uid + "/" + filename);
-        ref.putFile(pdfUri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        final StorageReference ref = FirebaseStorage.getInstance().getReference()
+                .child("Uploads/" + uid + "/" + filename);
+
+        ref.putFile(pdfUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    public void onSuccess(Uri uri) {
+                        docUrl = uri.toString();
+                        final String assignId = UUID.randomUUID().toString();
+
+                        Assignments assignments = new Assignments(assignId, name, desc, docUrl, filename, date, time, created, modify, classId);
+                        DatabaseUtil.tableAssignmentWithOneChild(assignId).setValue(assignments);
+//                                tableAssignment.child(id).setValue(assignments);
+
+//                                tableMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
+                        DatabaseUtil.tableMember().addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onSuccess(Uri uri) {
-                                docUrl = uri.toString();
-                                final String id = UUID.randomUUID().toString();
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        ClassMember member = snapshot.getValue(ClassMember.class);
+                                        if (member != null && member.getClassId().equals(classId)) {
+                                            String memberId = member.getMemberId();
 
-                                Assignments assignments = new Assignments(id, name, desc, docUrl, filename, date, time, created, modify, classId);
-                                tableAssignment.child(id).setValue(assignments);
+                                            Notification notification = new Notification("Notify Members", uid, assignId);
+                                            DatabaseUtil.tableNotificationWithOneChild(memberId).push().setValue(notification);
+//                                                    tableNotify.child(memberId).push().setValue(notification);
 
-                                tableMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
-                                tableMember.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.exists()) {
-                                            for (final DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                                ClassMember member = snapshot.getValue(ClassMember.class);
-                                                if (member != null && member.getClassId().equals(classId)) {
-                                                    String memberId = member.getMemberId();
-
-                                                    Notification notification = new Notification("Notify Members", uid, id);
-                                                    tableNotify.child(memberId).push().setValue(notification);
-
-                                                    Submission submission = new Submission(memberId, id, "Not Submitted");
-                                                    String id = UUID.randomUUID().toString();
-                                                    tableSubmit.child(id).setValue(submission);
-                                                }
-                                            }
+                                            Submission submission = new Submission(memberId, assignId, Constant.NOT_SUBMITTED);
+                                            String id = UUID.randomUUID().toString();
+                                            DatabaseUtil.tableSubmissionWithOneChild(id).setValue(submission);
+//                                                    tableSubmit.child(id).setValue(submission);
                                         }
                                     }
+                                }
+                            }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    }
-                                });
-                                Toast.makeText(AddAssignmentActivity.this, "File successfully uploaded", Toast.LENGTH_SHORT).show();
-                                progressDialog.dismiss();
-                                finish();
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
                             }
                         });
+                        Toast.makeText(AddAssignmentActivity.this, "File successfully uploaded", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+                        finish();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(AddAssignmentActivity.this, "File not successfully uploaded", Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override

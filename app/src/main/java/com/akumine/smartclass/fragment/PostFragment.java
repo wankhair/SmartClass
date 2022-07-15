@@ -18,12 +18,11 @@ import com.akumine.smartclass.activity.AddPostActivity;
 import com.akumine.smartclass.activity.ClickPostActivity;
 import com.akumine.smartclass.model.Post;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.view.PostViewHolder;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -84,8 +83,8 @@ public class PostFragment extends Fragment implements View.OnClickListener,
     }
 
     private void getPostLists() {
-        DatabaseReference tablePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST);
-        Query query = tablePost.orderByChild(Post.DB_COLUMN_CLASS_ID).equalTo(classId);
+//        DatabaseReference tablePost = FirebaseDatabase.getInstance().getReference(Post.DB_POST);
+        Query query = DatabaseUtil.tablePost().orderByChild(Post.CLASS_ID).equalTo(classId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

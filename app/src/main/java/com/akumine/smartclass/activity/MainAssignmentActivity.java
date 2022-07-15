@@ -20,6 +20,7 @@ import com.akumine.smartclass.fragment.SubmissionFragment;
 import com.akumine.smartclass.model.Notification;
 import com.akumine.smartclass.model.Submission;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,8 +40,8 @@ public class MainAssignmentActivity extends AppCompatActivity {
     private String classId;
     private String assignId;
 
-    private DatabaseReference tableNotify;
-    private DatabaseReference tableSubmit;
+//    private DatabaseReference tableNotify;
+//    private DatabaseReference tableSubmit;
 
     private int[] tabIcons = {
             R.drawable.ic_submit_file,
@@ -79,7 +80,7 @@ public class MainAssignmentActivity extends AppCompatActivity {
         classId = intent.getStringExtra(Constant.EXTRA_CLASS_ID);
         assignId = intent.getStringExtra(Constant.EXTRA_ASSIGN_ID);
 
-        tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
+//        tableNotify = FirebaseDatabase.getInstance().getReference().child(Notification.DB_NOTIFICATION);
 
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
         adapter.addFragment(SubmissionFragment.newInstance(uid, assignId), "Submission");
@@ -128,6 +129,7 @@ public class MainAssignmentActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // get result scan qr code from the SubmissionFragment.java
     @Override
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -139,15 +141,21 @@ public class MainAssignmentActivity extends AppCompatActivity {
                 hold = result.getContents();
                 String from_intent = MainAssignmentActivity.hold;
                 String[] split = from_intent.split("/");
+
+                if (split.length != 3) {
+                    Toast.makeText(this, "Wrong QR Code", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 final String classId = split[0];
                 final String assignId = split[1];
                 final String memberId = split[2];
 
                 //to confirm the submission and update db
-                final Submission submission = new Submission(memberId, assignId, "Submitted");
+                final Submission submission = new Submission(memberId, assignId, Constant.SUBMITTED);
 
-                tableSubmit = FirebaseDatabase.getInstance().getReference(Submission.DB_SUBMIT);
-                tableSubmit.addValueEventListener(new ValueEventListener() {
+//                tableSubmit = FirebaseDatabase.getInstance().getReference(Submission.DB_SUBMIT);
+                DatabaseUtil.tableSubmission().addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
@@ -158,11 +166,13 @@ public class MainAssignmentActivity extends AppCompatActivity {
                                         && submission1.getMemberId().equals(memberId)) {
                                     String id = snapshot.getKey();
                                     if (id != null) {
-                                        tableSubmit.child(id).setValue(submission);
+                                        DatabaseUtil.tableSubmissionWithOneChild(id).setValue(submission);
+//                                        tableSubmit.child(id).setValue(submission);
                                     }
 
                                     Notification notification = new Notification("Confirm Submission", uid, assignId);
-                                    tableNotify.child(memberId).push().setValue(notification);
+                                    DatabaseUtil.tableNotificationWithOneChild(memberId).push().setValue(notification);
+//                                    tableNotify.child(memberId).push().setValue(notification);
                                 }
                             }
                         }

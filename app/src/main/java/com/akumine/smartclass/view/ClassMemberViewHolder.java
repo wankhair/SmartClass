@@ -10,11 +10,12 @@ import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Classes;
 import com.akumine.smartclass.model.User;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Locale;
 
 public class ClassMemberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -41,25 +42,26 @@ public class ClassMemberViewHolder extends RecyclerView.ViewHolder implements Vi
     public void bindData(ClassMember classMemberList) {
         classId = classMemberList.getClassId();
 
-        DatabaseReference tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
-        tableClass.addValueEventListener(new ValueEventListener() {
+//        DatabaseReference tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS).child(classId);
+        DatabaseUtil.tableClassWithOneChild(classId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    final String className = dataSnapshot.child(Classes.DB_COLUMN_NAME).getValue().toString();
-                    final String lecId = dataSnapshot.child(Classes.DB_COLUMN_LECTURER_ID).getValue().toString();
-                    final String currentUser = dataSnapshot.child(Classes.DB_COLUMN_CURRENT_USER).getValue().toString();
-                    final String maxUser = dataSnapshot.child(Classes.DB_COLUMN_MAX_USER).getValue().toString();
+                    final String className = dataSnapshot.child(Classes.CLASS_NAME).getValue().toString();
+                    final String lecId = dataSnapshot.child(Classes.LECTURER_ID).getValue().toString();
+                    final String currentUser = dataSnapshot.child(Classes.CURRENT_USER).getValue().toString();
+                    final String maxUser = dataSnapshot.child(Classes.MAX_USER).getValue().toString();
 
-                    DatabaseReference tableUser = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(lecId);
-                    tableUser.addValueEventListener(new ValueEventListener() {
+//                    DatabaseReference tableUser = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(lecId);
+                    DatabaseUtil.tableUserWithOneChild(lecId).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                String username = dataSnapshot.child(User.DB_COLUMN_USERNAME).getValue().toString();
+                                String username = dataSnapshot.child(User.USERNAME).getValue().toString();
 
                                 classTitle.setText(className);
-                                classMember.setText(currentUser + "/" + maxUser);
+                                classMember.setText(String.format(Locale.getDefault(), "%s/%s", currentUser, maxUser));
+                                //classMember.setText(currentUser + "/" + maxUser);
                                 lecName.setText(username);
                             }
                         }

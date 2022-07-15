@@ -2,10 +2,10 @@ package com.akumine.smartclass.model;
 
 public class Submission {
 
-    public static final String DB_SUBMIT = "Submit";
-    public static final String DB_COLUMN_MEMBER_ID = "memberId";
-    public static final String DB_COLUMN_ASSIGN_ID = "assignId";
-    public static final String DB_COLUMN_STATUS = "status";
+    public static final String TABLE_SUBMIT = "Submit";
+    public static final String MEMBER_ID = "memberId";
+    public static final String ASSIGN_ID = "assignId";
+    public static final String STATUS = "status";
 
     private String memberId;
     private String assignId;
@@ -24,20 +24,20 @@ public class Submission {
         return memberId;
     }
 
-    public void setMemberId(String memberId) {
-        this.memberId = memberId;
-    }
-
     public String getAssignId() {
         return assignId;
     }
 
-    public void setAssignId(String assignId) {
-        this.assignId = assignId;
-    }
-
     public String getStatus() {
         return status;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
+    }
+
+    public void setAssignId(String assignId) {
+        this.assignId = assignId;
     }
 
     public void setStatus(String status) {

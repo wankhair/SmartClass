@@ -9,6 +9,9 @@ public class Constant {
     //preference
     public static final String PREFERENCE_ROLE = "userRole";
 
+    public static final String SUBMITTED = "Submitted";
+    public static final String NOT_SUBMITTED = "Not Submitted";
+
     //intent extra
     public static final String EXTRA_USER_ID = "extra.user_id";
     public static final String EXTRA_EMAIL = "extra.email";

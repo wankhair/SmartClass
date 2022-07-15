@@ -14,12 +14,12 @@ public class PreferenceUtil {
     public static void setRole(Context context, String role) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREFERENCE_ROLE, 0);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(User.DB_COLUMN_ROLE, role);
+        editor.putString(User.ROLE, role);
         editor.apply();
     }
 
     public static String getRole(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constant.PREFERENCE_ROLE, 0);
-        return sharedPreferences.getString(User.DB_COLUMN_ROLE, null);
+        return sharedPreferences.getString(User.ROLE, null);
     }
 }

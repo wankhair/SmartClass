@@ -14,7 +14,7 @@ import java.util.List;
 
 public class PermissionUtil {
 
-    private PermissionUtil() {
+    public PermissionUtil() {
         throw new AssertionError("Do not initialize constructor");
     }
 
@@ -80,7 +80,7 @@ public class PermissionUtil {
     }
 
     /**
-     * Check if the ic_user granted write permissions to the external storage.
+     * Check if the user granted write permissions to the external storage.
      *
      * @param context The Context to check the permissions for.
      * @return True if granted the permissions. False otherwise.
@@ -91,7 +91,7 @@ public class PermissionUtil {
     }
 
     /**
-     * Check if the ic_user granted read permissions from the external storage.
+     * Check if the user granted read permissions from the external storage.
      *
      * @param context The Context to check the permissions for.
      * @return True if granted the permissions. False otherwise.
@@ -102,7 +102,7 @@ public class PermissionUtil {
     }
 
     /**
-     * Check if the ic_user granted camera permissions.
+     * Check if the user granted camera permissions.
      *
      * @param context The Context to check the permissions for.
      * @return True if granted the permissions. False otherwise.

@@ -4,15 +4,15 @@ import java.util.Comparator;
 
 public class Post {
 
-    public static final String DB_POST = "Post";
-    public static final String DB_COLUMN_ID = "id";
-    public static final String DB_COLUMN_TEXT = "text";
-    public static final String DB_COLUMN_IMAGE_URL = "imageUrl";
-    public static final String DB_COLUMN_DATE = "date";
-    public static final String DB_COLUMN_TIME = "time";
-    public static final String DB_COLUMN_CLASS_ID = "classId";
-    public static final String DB_COLUMN_USER_ID = "userId";
-    public static final String DB_COLUMN_CREATED = "created";
+    public static final String TABLE_POST = "Post";
+    public static final String ID = "id";
+    public static final String TEXT = "text";
+    public static final String IMAGE_URL = "imageUrl";
+    public static final String DATE = "date";
+    public static final String TIME = "time";
+    public static final String CLASS_ID = "classId";
+    public static final String USER_ID = "userId";
+    public static final String CREATED = "created";
 
     public static final Comparator<Post> BY_CREATED_DATE = new Comparator<Post>() {
         @Override
@@ -44,7 +44,6 @@ public class Post {
         this.created = created;
     }
 
-    //region Getter
     public String getId() {
         return id;
     }
@@ -76,9 +75,7 @@ public class Post {
     public String getCreated() {
         return created;
     }
-    //endregion
 
-    //region Setter
     public void setId(String id) {
         this.id = id;
     }
@@ -110,5 +107,4 @@ public class Post {
     public void setCreated(String created) {
         this.created = created;
     }
-    //endregion
 }

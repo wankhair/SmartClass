@@ -19,13 +19,12 @@ import com.akumine.smartclass.activity.AddAssignmentActivity;
 import com.akumine.smartclass.activity.MainAssignmentActivity;
 import com.akumine.smartclass.model.Assignments;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.util.PreferenceUtil;
 import com.akumine.smartclass.view.AssignmentViewHolder;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
@@ -74,11 +73,11 @@ public class AssignmentFragment extends Fragment implements View.OnClickListener
             classId = getArguments().getString(Constant.ARGS_CLASS_ID);
         }
 
-        String role = PreferenceUtil.getRole(context);
-
         FloatingActionButton fabBtn = view.findViewById(R.id.fab_btn);
         fabBtn.setIcon(R.drawable.ic_add_white);
         fabBtn.setOnClickListener(this);
+
+        String role = PreferenceUtil.getRole(context);
 
         if (role != null) {
             if (role.equals(Constant.ROLE_LECTURER)) {
@@ -105,8 +104,8 @@ public class AssignmentFragment extends Fragment implements View.OnClickListener
     }
 
     private void setupAssignment() {
-        DatabaseReference tableAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT);
-        Query query = tableAssignment.orderByChild(Assignments.DB_COLUMN_CLASS_ID).equalTo(classId);
+//        DatabaseReference tableAssignment = FirebaseDatabase.getInstance().getReference(Assignments.DB_ASSIGNMENT);
+        Query query = DatabaseUtil.tableAssignment().orderByChild(Assignments.CLASS_ID).equalTo(classId);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

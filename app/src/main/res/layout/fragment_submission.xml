@@ -12,19 +12,19 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/entry_submission" />
 
-    <Button
-        android:id="@+id/btn_confirm_all"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/rounded_button"
-        android:text="Confirm all Submission"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textColor="@color/colorWhite" />
+<!--    <Button-->
+<!--        android:id="@+id/btn_confirm_all"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="35dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="50dp"-->
+<!--        android:layout_marginTop="15dp"-->
+<!--        android:layout_marginEnd="50dp"-->
+<!--        android:layout_marginBottom="15dp"-->
+<!--        android:background="@drawable/rounded_button"-->
+<!--        android:text="Confirm all Submission"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Body2"-->
+<!--        android:textColor="@color/colorWhite" />-->
 
     <com.getbase.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_btn"

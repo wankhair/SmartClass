@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.KeyboardUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -60,9 +60,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.reg_btn:
-                // to hide soft keyboard upon clicking button
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                // hide soft keyboard
+                KeyboardUtil.hideSoftKeyboard(this);
 
                 String email = regEmailText.getText().toString();
                 String password = regPassText.getText().toString();
@@ -131,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             UserInfoActivity.start(RegisterActivity.this, currentUid, email);
                             finish();
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Cannot Register", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Failed to Register, Please try again", Toast.LENGTH_SHORT).show();
                         }
                         progressDialog.dismiss();
                     }

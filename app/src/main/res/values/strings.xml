@@ -36,6 +36,8 @@
     <string name="generate_qr_code">Generate QR Code</string>
 
     <!-- Text Button -->
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>

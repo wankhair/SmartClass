@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.User;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MemberViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -36,21 +35,21 @@ public class MemberViewHolder extends RecyclerView.ViewHolder implements View.On
     public void bindData(ClassMember classMember, final int position) {
         this.classMember = classMember;
 
-        DatabaseReference tableMember = FirebaseDatabase.getInstance().getReference(User.DB_USER)
-                .child(classMember.getMemberId());
-        tableMember.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    String username = dataSnapshot.child(User.DB_COLUMN_USERNAME).getValue().toString();
-                    memberName.setText(username);
-                }
-            }
+//        DatabaseReference tableMember = FirebaseDatabase.getInstance().getReference(User.DB_USER).child(classMember.getMemberId());
+        DatabaseUtil.tableUserWithOneChild(classMember.getMemberId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            String username = dataSnapshot.child(User.USERNAME).getValue().toString();
+                            memberName.setText(username);
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
     }
 
     @Override

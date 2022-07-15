@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,14 +17,14 @@ import androidx.appcompat.widget.Toolbar;
 import com.akumine.smartclass.R;
 import com.akumine.smartclass.model.User;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
+import com.akumine.smartclass.util.KeyboardUtil;
 import com.akumine.smartclass.util.PermissionUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -37,7 +36,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginRegBtn;
 
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference tableUser;
     private ProgressDialog progressDialog;
 
     public static void start(Context context) {
@@ -70,23 +68,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.login_btn:
-                // to hide soft keyboard upon clicking button
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                // hide soft keyboard
+                KeyboardUtil.hideSoftKeyboard(this);
 
                 final String email = loginEmailText.getText().toString();
                 final String password = loginPassText.getText().toString();
 
                 if (isLoginCredentialsValidated(email, password)) {
-                    //to get device token when ic_user login
+                    // get device token when user login
                     FirebaseInstanceId.getInstance().getInstanceId()
-                            .addOnSuccessListener(LoginActivity.this, new OnSuccessListener<InstanceIdResult>() {
-                                @Override
-                                public void onSuccess(InstanceIdResult instanceIdResult) {
-                                    String token = instanceIdResult.getToken();
-                                    performLogin(email, password, token);
-                                }
-                            });
+                            .addOnSuccessListener(LoginActivity.this,
+                                    new OnSuccessListener<InstanceIdResult>() {
+                                        @Override
+                                        public void onSuccess(InstanceIdResult instanceIdResult) {
+                                            String token = instanceIdResult.getToken();
+                                            performLogin(email, password, token);
+                                        }
+                                    });
                 }
                 break;
             case R.id.login_reg_btn:
@@ -137,8 +135,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (task.isSuccessful()) {
                     String currentUid = firebaseAuth.getCurrentUser().getUid();
 
-                    tableUser = FirebaseDatabase.getInstance().getReference().child(User.DB_USER);
-                    tableUser.child(currentUid).child(User.DB_COLUMN_DEVICE_TOKEN).setValue(token);
+                    // save device token into db
+                    DatabaseUtil.tableUserWithTwoChild(currentUid, User.DEVICE_TOKEN).setValue(token);
 
                     MainActivity.start(LoginActivity.this, currentUid);
                     finish();

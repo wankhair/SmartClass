@@ -21,6 +21,7 @@ import com.akumine.smartclass.activity.MainClassActivity;
 import com.akumine.smartclass.model.ClassMember;
 import com.akumine.smartclass.model.Classes;
 import com.akumine.smartclass.util.Constant;
+import com.akumine.smartclass.util.DatabaseUtil;
 import com.akumine.smartclass.util.PermissionUtil;
 import com.akumine.smartclass.util.PreferenceUtil;
 import com.akumine.smartclass.view.ClassMemberViewHolder;
@@ -28,8 +29,6 @@ import com.akumine.smartclass.view.ClassViewHolder;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -47,7 +46,7 @@ public class ClassFragment extends Fragment implements View.OnClickListener,
     private ClassAdapter classAdapter;
     private ClassMemberAdapter memberAdapter;
 
-    private DatabaseReference tableClass;
+//    private DatabaseReference tableClass;
 
     private String uid;
     private String role;
@@ -82,7 +81,7 @@ public class ClassFragment extends Fragment implements View.OnClickListener,
             uid = getArguments().getString(Constant.ARGS_USER_ID);
         }
 
-        tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS);
+//        tableClass = FirebaseDatabase.getInstance().getReference(Classes.DB_CLASS);
 
         fabButton = view.findViewById(R.id.fab_btn);
         fabButton.setOnClickListener(this);
@@ -91,11 +90,12 @@ public class ClassFragment extends Fragment implements View.OnClickListener,
         recyclerClass.setLayoutManager(new LinearLayoutManager(context));
 
         role = PreferenceUtil.getRole(context);
-        if (role.equals(Constant.ROLE_LECTURER)) {
-            getLecturer();
-
-        } else if (role.equals(Constant.ROLE_STUDENT)) {
-            getStudent();
+        if (role != null) {
+            if (role.equals(Constant.ROLE_LECTURER)) {
+                getLecturer();
+            } else if (role.equals(Constant.ROLE_STUDENT)) {
+                getStudent();
+            }
         }
     }
 
@@ -105,7 +105,7 @@ public class ClassFragment extends Fragment implements View.OnClickListener,
         classAdapter = new ClassAdapter(null, this);
         recyclerClass.setAdapter(classAdapter);
 
-        Query query = tableClass.orderByChild(Classes.DB_COLUMN_LECTURER_ID).equalTo(uid);
+        Query query = DatabaseUtil.tableClass().orderByChild(Classes.LECTURER_ID).equalTo(uid);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -131,8 +131,8 @@ public class ClassFragment extends Fragment implements View.OnClickListener,
         memberAdapter = new ClassMemberAdapter(null, this);
         recyclerClass.setAdapter(memberAdapter);
 
-        DatabaseReference tableClassMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
-        Query query = tableClassMember.orderByChild(ClassMember.DB_COLUMN_MEMBER_ID).equalTo(uid);
+//        DatabaseReference tableClassMember = FirebaseDatabase.getInstance().getReference().child(ClassMember.DB_CLASSMEMBER);
+        Query query = DatabaseUtil.tableMember().orderByChild(ClassMember.MEMBER_ID).equalTo(uid);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -142,7 +142,7 @@ public class ClassFragment extends Fragment implements View.OnClickListener,
                         ClassMember member = snapshot.getValue(ClassMember.class);
                         classMemberList.add(member);
 
-                        Query query1 = tableClass.orderByChild(Classes.DB_COLUMN_CREATED);
+                        Query query1 = DatabaseUtil.tableClass().orderByChild(Classes.CREATED);
                         query1.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
